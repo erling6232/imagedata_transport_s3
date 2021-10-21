@@ -92,10 +92,10 @@ class BiffPlugin(AbstractPlugin):
             self: format plugin instance
             f: file handle or filename (depending on self._need_local_file)
             opts: Input options (dict)
-            hdr: Header dict
+            hdr: Header
         Returns:
             Tuple of
-                hdr: Header dict
+                hdr: Header
                     Return values:
                         - info: Internal data for the plugin
                               None if the given file should not be included (e.g. raw file)
@@ -135,13 +135,13 @@ class BiffPlugin(AbstractPlugin):
         img = np.zeros([nt, nz, ny, nx], dtype)
         iband = 0  # Band numbers start from zero
         if 'input_sort' in opts and opts['input_sort'] == imagedata.formats.SORT_ON_TAG:
-            hdr['input_sort'] = imagedata.formats.SORT_ON_TAG
+            hdr.input_sort = imagedata.formats.SORT_ON_TAG
             for slice in range(nz):
                 for tag in range(nt):
                     img[tag, slice, :, :] = self._read_band(iband)
                     iband += 1
         else:  # opts['input_sort'] == imagedata.formats.SORT_ON_SLICE:
-            hdr['input_sort'] = imagedata.formats.SORT_ON_SLICE
+            hdr.input_sort = imagedata.formats.SORT_ON_SLICE
             for tag in range(nt):
                 for slice in range(nz):
                     img[tag, slice, :, :] = self._read_band(iband)
@@ -158,14 +158,14 @@ class BiffPlugin(AbstractPlugin):
         Args:
             self: format plugin instance
             image_list: list with (info,img) tuples
-            hdr: Header dict
+            hdr: Header
             si: numpy array (multi-dimensional)
         Returns:
-            hdr: Header dict
+            hdr: Header
         """
 
-        hdr['photometricInterpretation'] = 'MONOCHROME2'
-        hdr['color'] = False
+        hdr.photometricInterpretation = 'MONOCHROME2'
+        hdr.color = False
         axes = list()
         nt = nz = 1
         axes.append(imagedata.axis.UniformLengthAxis(
@@ -189,14 +189,14 @@ class BiffPlugin(AbstractPlugin):
         if si.ndim > 3:
             nt = si.shape[-4]
             axes.insert(0, imagedata.axis.UniformLengthAxis(
-                imagedata.formats.input_order_to_dirname_str(hdr['input_order']),
+                imagedata.formats.input_order_to_dirname_str(hdr.input_order),
                 0,
                 nt)
                         )
-        hdr['axes'] = axes
-        hdr['tags'] = {}
+        hdr.axes = axes
+        hdr.tags = {}
         for slice in range(nz):
-            hdr['tags'][slice] = np.array([t for t in range(nt)])
+            hdr.tags[slice] = np.array([t for t in range(nt)])
 
     def write_3d_numpy(self, si, destination, opts):
         """Write 3D numpy image as Xite biff file
