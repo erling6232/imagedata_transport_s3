@@ -1,0 +1,38 @@
+# Include the README
+include *.rst
+
+# Include the license file
+include LICENSE.txt
+
+# Include version file
+include VERSION.txt
+
+# Do not distribute test data
+include data
+recursive-include data *.biff
+recursive-include data *.zip
+prune .idea
+include docs
+prune docs/_build
+recursive-include docs *
+recursive-include tests *.py
+
+# include *.py
+include *.yaml
+include Makefile
+include tox.ini
+exclude .coveragerc
+include pylintrc
+recursive-include imagedata *.py
+
+recursive-include data *.dcm
+recursive-include data *.biff
+recursive-include data *.IMA
+recursive-include data *.gif
+recursive-include data *.gz
+recursive-include data *.jpg
+recursive-include data *.mat
+recursive-include data *.mha
+recursive-include data *.pdf
+recursive-include data *.ps
+recursive-include data *.zip
