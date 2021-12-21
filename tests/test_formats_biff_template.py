@@ -34,7 +34,8 @@ class test_biff_template(unittest.TestCase):
         plugins = imagedata.formats.get_plugins_list()
         self.dicom_plugin = None
         for pname, ptype, pclass in plugins:
-            if ptype == 'biff': self.biff_plugin = pclass
+            if ptype == 'biff':
+                self.biff_plugin = pclass
         self.assertIsNotNone(self.biff_plugin)
 
         self.template = Series(os.path.join('data', 'dicom', 'time', 'time00'))
