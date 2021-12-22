@@ -18,7 +18,7 @@ upload:
 git:
 	git log --oneline --decorate
 	git tag -a `cat VERSION.txt`
-	git push origin master --tags
+	git push origin main --tags
 
 html:
 	cd docs; \
