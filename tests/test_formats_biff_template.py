@@ -13,6 +13,14 @@ import imagedata.formats
 from imagedata.series import Series
 from .compare_headers import compare_headers, compare_template_headers, compare_geometry_headers
 
+from imagedata import plugins
+from imagedata_format_ps.biffplugin import BiffPlugin
+plugin_type = 'format'
+plugin_name = BiffPlugin.name + 'format'
+class_name = BiffPlugin.name
+pclass = BiffPlugin
+plugins[plugin_type].append((plugin_name, class_name, pclass))
+
 
 class ShouldHaveFailed(Exception):
     pass

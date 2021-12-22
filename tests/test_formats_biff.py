@@ -12,6 +12,14 @@ import imagedata.readdata
 import imagedata.formats
 from imagedata.series import Series
 
+from imagedata import plugins
+from imagedata_format_biff.biffplugin import BiffPlugin
+plugin_type = 'format'
+plugin_name = BiffPlugin.name + 'format'
+class_name = BiffPlugin.name
+pclass = BiffPlugin
+plugins[plugin_type].append((plugin_name, class_name, pclass))
+
 
 class Test3DBiffPlugin(unittest.TestCase):
     def setUp(self):
