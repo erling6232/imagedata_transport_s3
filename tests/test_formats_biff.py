@@ -28,13 +28,13 @@ class Test3DBiffPlugin(unittest.TestCase):
 
         self.opts = parser.parse_args(['--of', 'biff', '--serdes', '1'])
 
-        self.opts_2x40 = parser.parse_args([
+        self.opts_2x3 = parser.parse_args([
             '--of', 'biff',
-            '--input_shape', '2x40'])
+            '--input_shape', '2x3'])
 
-        self.opts_10x40 = parser.parse_args([
+        self.opts_3x3 = parser.parse_args([
             '--of', 'biff',
-            '--input_shape', '10x40'])
+            '--input_shape', '3x3'])
 
         plugins = imagedata.formats.get_plugins_list()
         self.dicom_plugin = None
@@ -50,7 +50,7 @@ class Test3DBiffPlugin(unittest.TestCase):
             'none',
             self.opts)
         self.assertEqual(si1.dtype, np.uint16)
-        self.assertEqual(si1.shape, (40, 192, 152))
+        self.assertEqual(si1.shape, (3, 192, 152))
 
     # @unittest.skip("skipping test_read_2D")
     def test_read_2D(self):
@@ -59,7 +59,7 @@ class Test3DBiffPlugin(unittest.TestCase):
             'none',
             self.opts)
         self.assertEqual(si1.dtype, np.uint16)
-        self.assertEqual(si1.shape, (40, 192, 152))
+        self.assertEqual(si1.shape, (3, 192, 152))
         si2 = si1[0, ...]
         with tempfile.TemporaryDirectory() as d:
             si2.write(d, formats=['biff'])
@@ -76,7 +76,7 @@ class Test3DBiffPlugin(unittest.TestCase):
             imagedata.formats.INPUT_ORDER_TIME,
             self.opts)
         self.assertEqual(si1.dtype, np.uint16)
-        self.assertEqual(si1.shape, (2, 40, 192, 152))
+        self.assertEqual(si1.shape, (2, 3, 192, 152))
 
     # @unittest.skip("skipping test_zipread_single_file")
     def test_zipread_single_file(self):
@@ -85,16 +85,16 @@ class Test3DBiffPlugin(unittest.TestCase):
             'none',
             self.opts)
         self.assertEqual(si1.dtype, np.uint16)
-        self.assertEqual(si1.shape, (40, 192, 152))
+        self.assertEqual(si1.shape, (3, 192, 152))
 
     # @unittest.skip("skipping test_zipread_two_files")
     def test_zipread_two_files(self):
         si1 = Series(
-            os.path.join('data', 'biff', 'time.zip?.*time0[01].biff'),
+            os.path.join('data', 'biff', 'time.zip?*time0[01].biff'),
             imagedata.formats.INPUT_ORDER_TIME,
             self.opts)
         self.assertEqual(si1.dtype, np.uint16)
-        self.assertEqual(si1.shape, (2, 40, 192, 152))
+        self.assertEqual(si1.shape, (2, 3, 192, 152))
 
     # @unittest.skip("skipping test_zipread_single_directory")
     def test_zipread_single_directory(self):
@@ -103,7 +103,7 @@ class Test3DBiffPlugin(unittest.TestCase):
             imagedata.formats.INPUT_ORDER_TIME,
             self.opts)
         self.assertEqual(si1.dtype, np.uint16)
-        self.assertEqual(si1.shape, (10, 40, 192, 152))
+        self.assertEqual(si1.shape, (3, 3, 192, 152))
 
     # @unittest.skip("skipping test_zipread_all_files")
     def test_zipread_all_files(self):
@@ -112,7 +112,7 @@ class Test3DBiffPlugin(unittest.TestCase):
             imagedata.formats.INPUT_ORDER_TIME,
             self.opts)
         self.assertEqual(si1.dtype, np.uint16)
-        self.assertEqual(si1.shape, (10, 40, 192, 152))
+        self.assertEqual(si1.shape, (3, 3, 192, 152))
 
     # @unittest.skip("skipping test_write_single_file")
     def test_write_single_file(self):
@@ -212,9 +212,9 @@ class Test4DWriteBiffPlugin(unittest.TestCase):
             '--of', 'biff',
             '--serdes', '1'])
 
-        self.opts_10x40 = parser.parse_args([
+        self.opts_3x3 = parser.parse_args([
             '--of', 'biff',
-            '--input_shape', '10x40',
+            '--input_shape', '3x3',
             '--serdes', '1'])
 
         plugins = imagedata.formats.get_plugins_list()
@@ -236,7 +236,7 @@ class Test4DWriteBiffPlugin(unittest.TestCase):
             si2 = Series(
                 d,
                 imagedata.formats.INPUT_ORDER_TIME,
-                self.opts_10x40)
+                self.opts_3x3)
         self.assertEqual(si1.dtype, si2.dtype)
         self.assertEqual(si1.shape, si2.shape)
 
@@ -249,9 +249,9 @@ class Test4DBiffPlugin(unittest.TestCase):
         self.opts = parser.parse_args([
             '--of', 'biff'])
 
-        self.opts_10x40 = parser.parse_args([
+        self.opts_3x3 = parser.parse_args([
             '--of', 'biff',
-            '--input_shape', '10x40'])
+            '--input_shape', '3x3'])
 
         plugins = imagedata.formats.get_plugins_list()
         self.dicom_plugin = None
@@ -269,7 +269,7 @@ class Test4DBiffPlugin(unittest.TestCase):
             imagedata.formats.INPUT_ORDER_TIME,
             self.opts)
         self.assertEqual(si1.dtype, np.uint16)
-        self.assertEqual(si1.shape, (10, 40, 192, 152))
+        self.assertEqual(si1.shape, (3, 3, 192, 152))
 
         si1.sort_on = imagedata.formats.SORT_ON_SLICE
         log.debug("test_write_4d_biff: si1.sort_on {}".format(
@@ -284,7 +284,7 @@ class Test4DBiffPlugin(unittest.TestCase):
             si2 = Series(
                 os.path.join(d, 'biff'),
                 imagedata.formats.INPUT_ORDER_TIME,
-                self.opts_10x40)
+                self.opts_3x3)
         self.assertEqual(si1.shape, si2.shape)
         np.testing.assert_array_equal(si1, si2)
 
@@ -297,9 +297,9 @@ class TestWriteZipBiffPlugin(unittest.TestCase):
         self.opts = parser.parse_args([
             '--of', 'biff'])
 
-        self.opts_10x40 = parser.parse_args([
+        self.opts_3x3 = parser.parse_args([
             '--of', 'biff',
-            '--input_shape', '10x40'])
+            '--input_shape', '3x3'])
 
         plugins = imagedata.formats.get_plugins_list()
         self.dicom_plugin = None
@@ -322,7 +322,7 @@ class TestWriteZipBiffPlugin(unittest.TestCase):
             si2 = Series(
                 os.path.join(d, 'biff.zip'),
                 imagedata.formats.INPUT_ORDER_TIME,
-                self.opts_10x40)
+                self.opts_3x3)
         self.assertEqual(si1.shape, si2.shape)
         np.testing.assert_array_equal(si1, si2)
 

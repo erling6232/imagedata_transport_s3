@@ -25,3 +25,4 @@ exclude .coveragerc
 include pylintrc
 
 recursive-include data *.biff
+recursive-include data *.dcm

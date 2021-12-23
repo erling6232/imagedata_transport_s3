@@ -61,6 +61,7 @@ class test_biff_template(unittest.TestCase):
         si2 = Series(os.path.join('data', 'dicom', 'time', 'time00'))
         # Compare constructed series si1 to original series si2
         self.assertEqual(si1.dtype, si2.dtype)
+        self.assertEqual(si1.shape, si2.shape)
         np.testing.assert_array_equal(si1, si2)
         compare_template_headers(self, si1, si2)
         # Write constructed series si1 to disk,
@@ -80,6 +81,7 @@ class test_biff_template(unittest.TestCase):
             template=self.template)
         # Compare constructed series si1 to original series
         self.assertEqual(si1.dtype, self.template.dtype)
+        self.assertEqual(si1.shape, self.template.shape)
         np.testing.assert_array_equal(si1, self.template)
         compare_template_headers(self, si1, self.template)
 
@@ -94,6 +96,7 @@ class test_biff_template(unittest.TestCase):
         si2 = Series(os.path.join('data', 'dicom', 'time', 'time00'))
         # Compare constructed series si1 to original series si2
         self.assertEqual(si1.dtype, si2.dtype)
+        self.assertEqual(si1.shape, si2.shape)
         np.testing.assert_array_equal(si1, si2)
         compare_geometry_headers(self, si1, si2)
         try:
@@ -120,6 +123,7 @@ class test_biff_template(unittest.TestCase):
             geometry=self.geometry)
         # Compare constructed series si1 to original series
         self.assertEqual(si1.dtype, self.geometry.dtype)
+        self.assertEqual(si1.shape, self.geometry.shape)
         np.testing.assert_array_equal(si1, self.geometry)
         compare_geometry_headers(self, si1, self.geometry)
         try:
@@ -141,6 +145,7 @@ class test_biff_template(unittest.TestCase):
         si2 = Series(os.path.join('data', 'dicom', 'time', 'time00'))
         # Compare constructed series si1 to original series si2
         self.assertEqual(si1.dtype, si2.dtype)
+        self.assertEqual(si1.shape, si2.shape)
         np.testing.assert_array_equal(si1, si2)
         compare_headers(self, si1, si2)
         # Write constructed series si1 to disk,
@@ -161,6 +166,7 @@ class test_biff_template(unittest.TestCase):
             geometry=self.geometry)
         # Compare constructed series si1 to original series
         self.assertEqual(si1.dtype, self.template.dtype)
+        self.assertEqual(si1.shape, self.template.shape)
         np.testing.assert_array_equal(si1, self.template)
         compare_geometry_headers(self, si1, self.geometry)
         compare_template_headers(self, si1, self.template)
