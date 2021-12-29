@@ -27,7 +27,7 @@ jobs:
         python -m pip install .
     - name: Run Unit Tests and generate coverage report
       run: |
-        coverage run unittest
+        coverage run -m unittest discover
         coverage xml
         coverage html
     - name: Upload coverage to Codecov
