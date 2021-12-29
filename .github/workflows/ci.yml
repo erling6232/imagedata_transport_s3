@@ -30,15 +30,13 @@ jobs:
         coverage run -m unittest
         coverage xml
         coverage html
-        ls -lt
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
       with:
         fail_ci_if_error: true
         token: ${{ secrets.CODECOV_TOKEN }}
         flags: unittests
-        verbose: true
-        
+        verbose: false
     - name: Archive code coverage html report
       uses: actions/upload-artifact@v2
       with:
