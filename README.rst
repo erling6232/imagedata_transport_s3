@@ -19,7 +19,7 @@ Imagedata plugin for biff image files.
 
 .. _buildstatus: https://github.com/erling6232/imagedata_format_biff/actions
 
-.. |coverage| image:: https://codecov.io/gh/erling6232/imagedata_format_biff/branch/master/graph/badge.svg?token=GT9KZV2TWT
+.. |coverage| image:: https://codecov.io/gh/erling6232/imagedata_format_biff/branch/main/graph/badge.svg?token=1OPGNXJ8Z3
     :alt: Coverage
     :target: https://codecov.io/gh/erling6232/imagedata_format_biff
 
