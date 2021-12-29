@@ -1,4 +1,4 @@
-name: build
+name: Workflow for build and codecov
 on: [push]
 jobs:
   build:
@@ -27,10 +27,9 @@ jobs:
         python -m pip install .
     - name: Run Unit Tests and generate coverage report
       run: |
-        coverage run -m unittest
+        coverage run -m unittest tests
+        coverage xml
         ls -lt
-    #    coverage report
-    #    coverage html
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
       with:
