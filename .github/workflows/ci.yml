@@ -1,4 +1,4 @@
-name: build
+name: Workflow for build and codecov
 on: [push]
 jobs:
   build:
@@ -24,23 +24,26 @@ jobs:
       run: |
         python -m pip install --user --upgrade build
         python -m build
+        python -m pip install .
     - name: Run Unit Tests and generate coverage report
       run: |
-        cd src
-        python -m unittest -v
-        coverage run -m unittest
-        coverage report
+        coverage run -m unittest tests
+        coverage xml
         coverage html
+        ls -lt
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
       with:
         fail_ci_if_error: true
         token: ${{ secrets.CODECOV_TOKEN }}
-    - name: Archive code coverage html report
-      uses: actions/upload-artifact@v2
-      with:
-        name: code-coverage-report
-        path: src/htmlcov
+        flags: unittests
+        verbose: true
+        
+    #- name: Archive code coverage html report
+    #  uses: actions/upload-artifact@v2
+    #  with:
+    #    name: code-coverage-report
+    #    path: src/htmlcov
     #- name: Archive package
     #  uses: actions/upload-artifact@v2
     #  with:
