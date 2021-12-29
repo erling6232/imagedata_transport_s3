@@ -25,11 +25,11 @@ jobs:
         python -m pip install --user --upgrade build
         python -m build
         python -m pip install .
-    - name: Run Unit Tests and generate coverage report
-      run: |
-        coverage run -m unittest
-        coverage report
-        coverage html
+    #- name: Run Unit Tests and generate coverage report
+    #  run: |
+    #    coverage run -m unittest
+    #    coverage report
+    #    coverage html
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
       with:
