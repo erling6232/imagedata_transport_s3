@@ -29,6 +29,7 @@ jobs:
       run: |
         coverage run -m unittest tests
         coverage xml
+        coverage html
         ls -lt
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
@@ -38,11 +39,11 @@ jobs:
         flags: unittests
         verbose: true
         
-    - name: Archive code coverage html report
-      uses: actions/upload-artifact@v2
-      with:
-        name: code-coverage-report
-        path: src/htmlcov
+    #- name: Archive code coverage html report
+    #  uses: actions/upload-artifact@v2
+    #  with:
+    #    name: code-coverage-report
+    #    path: src/htmlcov
     #- name: Archive package
     #  uses: actions/upload-artifact@v2
     #  with:
