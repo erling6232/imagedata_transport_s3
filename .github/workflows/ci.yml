@@ -26,7 +26,7 @@ jobs:
         python -m build
     - name: Run Unit Tests and generate coverage report
       run: |
-        # coverage run -m unittest
+        coverage run -m unittest
         # coverage report
         # coverage html
     - name: Upload coverage to Codecov
