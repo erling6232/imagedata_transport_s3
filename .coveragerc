@@ -1,6 +1,6 @@
 [run]
 branch = True
-source = src/imagedata-formats-biff
+source = src/imagedata_format_biff
 
 [report]
 exclude_lines =
