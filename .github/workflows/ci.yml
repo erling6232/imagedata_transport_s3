@@ -24,7 +24,7 @@ jobs:
       run: |
         python -m pip install --user --upgrade build
         python -m build
-        ls -lt
+        ls -lt dist
         # python -m pip install .
     - name: Run Unit Tests and generate coverage report
       run: |
