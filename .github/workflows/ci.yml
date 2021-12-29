@@ -25,9 +25,9 @@ jobs:
         python -m pip install --user --upgrade build
         python -m build
         python -m pip install .
-    #- name: Run Unit Tests and generate coverage report
-    #  run: |
-    #    coverage run -m unittest
+    - name: Run Unit Tests and generate coverage report
+      run: |
+        coverage run -m unittest
     #    coverage report
     #    coverage html
     - name: Upload coverage to Codecov
