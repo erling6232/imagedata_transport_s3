@@ -13,6 +13,10 @@ import imagedata.formats
 from imagedata.series import Series
 
 from imagedata import plugins
+import sys
+# sys.path.append(os.path.abspath('src/imagedata_format_biff'))
+sys.path.append(os.path.abspath('src'))
+# from .imagedata_format_biff.biffplugin import BiffPlugin
 from imagedata_format_biff.biffplugin import BiffPlugin
 plugin_type = 'format'
 plugin_name = BiffPlugin.name + 'format'
