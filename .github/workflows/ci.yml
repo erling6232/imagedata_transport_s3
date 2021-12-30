@@ -1,4 +1,4 @@
-name: Workflow for build and codecov
+name: build
 on: [push]
 jobs:
   build:
