@@ -19,6 +19,7 @@ jobs:
         cd src
         python -m pip install --upgrade pip
         pip install flake8 tox coverage twine pip-tools
+        ls -lt
         python -m piptools compile setup.cfg
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run package creation
