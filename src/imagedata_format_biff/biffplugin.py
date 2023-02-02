@@ -39,12 +39,13 @@ class BadShapeGiven(Exception):
 
 
 class BiffPlugin(AbstractPlugin):
-    """Read/write Xite biff files."""
+    """Read/write Xite biff files.
+    """
 
     name = "biff"
     description = "Read and write Xite biff files."
     authors = "Erling Andersen"
-    version = "1.0.0"
+    version = "1.0.1"
     url = "www.helse-bergen.no"
 
     Ilittle_endian_mask = 0x010000
@@ -105,6 +106,10 @@ class BiffPlugin(AbstractPlugin):
         info = {}
         self.status = None
         self.f = f
+
+        if hdr.input_order == 'auto':
+            hdr.input_order = 'none'
+
         try:
             self._read_info()
         except imagedata.formats.NotImageError:
@@ -136,16 +141,16 @@ class BiffPlugin(AbstractPlugin):
         iband = 0  # Band numbers start from zero
         if 'input_sort' in opts and opts['input_sort'] == imagedata.formats.SORT_ON_TAG:
             hdr.input_sort = imagedata.formats.SORT_ON_TAG
-            for slice in range(nz):
+            for _slice in range(nz):
                 for tag in range(nt):
-                    img[tag, slice, :, :] = self._read_band(iband)
+                    img[tag, _slice, :, :] = self._read_band(iband)
                     iband += 1
         else:  # opts['input_sort'] == imagedata.formats.SORT_ON_SLICE:
             hdr.input_sort = imagedata.formats.SORT_ON_SLICE
             for tag in range(nt):
-                for slice in range(nz):
-                    img[tag, slice, :, :] = self._read_band(iband)
-                    if tag == 0 and slice == 0:
+                for _slice in range(nz):
+                    img[tag, _slice, :, :] = self._read_band(iband)
+                    if tag == 0 and _slice == 0:
                         logging.debug('BiffPlugin._read_image: img(0) {}'.format(img[0, 0, 0, :4]))
                     iband += 1
         if len(img.shape) > 2 and img.shape[0] == 1:
@@ -195,8 +200,8 @@ class BiffPlugin(AbstractPlugin):
                         )
         hdr.axes = axes
         hdr.tags = {}
-        for slice in range(nz):
-            hdr.tags[slice] = np.array([t for t in range(nt)])
+        for _slice in range(nz):
+            hdr.tags[_slice] = np.array([t for t in range(nt)])
 
     def write_3d_numpy(self, si, destination, opts):
         """Write 3D numpy image as Xite biff file
@@ -204,9 +209,9 @@ class BiffPlugin(AbstractPlugin):
         Args:
             self: BiffPlugin instance
             si: Series array (3D or 4D), including these attributes:
-                * input_sort
-                * slices
-                * tags
+                input_sort
+                slices
+                tags
             destination: dict of archive and filenames
             opts: Output options (dict)
         """
@@ -243,7 +248,9 @@ class BiffPlugin(AbstractPlugin):
         assert si.ndim == 2 or si.ndim == 3, "write_3d_series: input dimension %d is not 2D/3D." % si.ndim
         # slices,ny,nx = si.shape[1:]
         # if slices != si.slices:
-        #    raise ValueError("write_3d_series: slices of dicom template ({}) differ from input array ({}).".format(si.slices, slices))
+        #    raise ValueError(
+        #    "write_3d_series: slices of dicom template ({}) differ from input array ({}).".format(
+        #    si.slices, slices))
 
         # if not os.path.isdir(directory_name):
         #    os.makedirs(directory_name)
@@ -278,8 +285,8 @@ class BiffPlugin(AbstractPlugin):
             if self.arr.ndim < 3:
                 self._write_band(iband, self.arr)
             else:
-                for slice in range(si.slices):
-                    self._write_band(iband, self.arr[slice])
+                for _slice in range(si.slices):
+                    self._write_band(iband, self.arr[_slice])
                     iband += 1
             logging.debug('BiffPlugin.write_3d_series: filename {}'.format(filename))
             self._write_text()
@@ -290,9 +297,9 @@ class BiffPlugin(AbstractPlugin):
         Args:
             self: BiffPlugin instance
             si[tag,slice,rows,columns]: Series array, including these attributes:
-                * input_sort
-                * slices
-                * tags
+                input_sort
+                slices
+                tags
             destination: dict of archive and filenames
             opts: Output options (dict)
         """
@@ -376,22 +383,22 @@ class BiffPlugin(AbstractPlugin):
                 self._open_image(f, 'w')
                 iband = 0
                 if self.output_sort == imagedata.formats.SORT_ON_TAG:
-                    for slice in range(slices):
+                    for _slice in range(slices):
                         for tag in range(steps):
-                            self._write_band(iband, self.arr[tag, slice])
+                            self._write_band(iband, self.arr[tag, _slice])
                             iband += 1
                 else:  # default: imagedata.formats.SORT_ON_SLICE:
                     for tag in range(steps):
-                        for slice in range(slices):
-                            self._write_band(iband, self.arr[tag, slice])
+                        for _slice in range(slices):
+                            self._write_band(iband, self.arr[tag, _slice])
                             iband += 1
                 logging.debug('BiffPlugin.write_4d_series')
                 self._write_text()
         else:  # self.output_dir == 'multi'
             if self.output_sort == imagedata.formats.SORT_ON_TAG:
                 digits = len("{}".format(slices))
-                for slice in range(slices):
-                    filename = "slice{0:0{1}}".format(slice, digits)
+                for _slice in range(slices):
+                    filename = "slice{0:0{1}}".format(_slice, digits)
                     # filename = os.path.join(directory_name, filename)
                     if len(os.path.splitext(filename)[1]) == 0:
                         filename = filename + '.biff'
@@ -400,7 +407,7 @@ class BiffPlugin(AbstractPlugin):
                         self._open_image(f, 'w')
                         iband = 0
                         for tag in range(steps):
-                            self._write_band(iband, self.arr[tag, slice])
+                            self._write_band(iband, self.arr[tag, _slice])
                             iband += 1
                         logging.debug('BiffPlugin.write_4d_series: filename {}'.format(filename))
                         self._write_text()
@@ -583,8 +590,10 @@ class BiffPlugin(AbstractPlugin):
                 raise imagedata.formats.NotImageError('{}'.format(e))
             # pt = self.pt & self.Ipixtyp_mask
             self.little_endian = (self.pt & self.Ilittle_endian_mask) != 0
-            # logging.debug('Band {} pt {} xsz {} ysz {} xst {} yst {} xmg {} ymg {} little {}'.format(bandnr, pt, self.xsz, self.ysz,
-            #            self.xst, self.yst, self.xmg, self.ymg, self.little_endian))
+            # logging.debug(
+            # 'Band {} pt {} xsz {} ysz {} xst {} yst {} xmg {} ymg {} little {}'.format(
+            #     bandnr, pt, self.xsz, self.ysz,
+            #     self.xst, self.yst, self.xmg, self.ymg, self.little_endian))
 
             self.bands[bandnr] = self._init_band(self.pt | (self.col * self.Icolor_mask), self.xsz, self.ysz)
         # Skip file to beginning of next 512 bytes block
@@ -780,7 +789,9 @@ class BiffPlugin(AbstractPlugin):
         for bandnr in range(self.nbands):
             size += self.num_blocks_band(bandnr)
         self.nbandblks = size
-        # logging.debug('_set_info: ninfoblks {} nbandblks {} ntextblks {} nblocks {}'.format(self.ninfoblks, self.nbandblks, self.ntextblks, self.nblocks))
+        # logging.debug(
+        #     '_set_info: ninfoblks {} nbandblks {} ntextblks {} nblocks {}'.format(
+        #         self.ninfoblks, self.nbandblks, self.ntextblks, self.nblocks))
 
         # Write BIFF image header
         try:
