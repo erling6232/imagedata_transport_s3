@@ -125,10 +125,13 @@ class BiffPlugin(AbstractPlugin):
         if 'input_shape' in opts and opts['input_shape']:
             nt, delim, nz = opts['input_shape'].partition('x')
             if len(nz) == 0:
-                raise BadShapeGiven('input_shape {} is not like (t)x(z)'.format(opts['input_shape']))
+                raise BadShapeGiven(
+                    'input_shape {} is not like (t)x(z)'.format(opts['input_shape']))
             nt, nz = int(nt), int(nz)
             if nt * nz != self.nbands:
-                raise BadShapeGiven('input_shape {} does not match {} bands'.format(opts['input_shape'], self.nbands))
+                raise BadShapeGiven(
+                    'input_shape {} does not match {} bands'.format(
+                        opts['input_shape'], self.nbands))
         else:
             # Assume the bands are slices
             nt, nz = 1, self.nbands
@@ -340,8 +343,8 @@ class BiffPlugin(AbstractPlugin):
                                                                                                     steps))
         if slices != si.slices:
             raise ValueError(
-                "write_4d_series: slices of dicom template ({}) differ from input array ({}).".format(si.slices,
-                                                                                                      slices))
+                "write_4d_series: slices of dicom template ({}) differ from input array ({}).".format(
+                    si.slices, slices))
 
         # if not os.path.isdir(directory_name):
         #    os.makedirs(directory_name)
@@ -414,8 +417,9 @@ class BiffPlugin(AbstractPlugin):
             else:  # self.output_sort == imagedata.formats.SORT_ON_SLICE:
                 digits = len("{}".format(steps))
                 for tag in range(steps):
-                    filename = "{0}{1:0{2}}".format(imagedata.formats.input_order_to_dirname_str(si.input_order),
-                                                    tag, digits)
+                    filename = "{0}{1:0{2}}".format(
+                        imagedata.formats.input_order_to_dirname_str(si.input_order),
+                        tag, digits)
                     # filename = os.path.join(directory_name, filename)
                     if len(os.path.splitext(filename)[1]) == 0:
                         filename = filename + '.biff'
@@ -563,8 +567,8 @@ class BiffPlugin(AbstractPlugin):
         self.col = col == b'C'
         logging.debug('_read_info: magic {} colour {}'.format(magic, self.col))
         logging.debug(
-            '_read_info: ninfoblks {} nbandblks {} ntextblks {} nblocks {}'.format(self.ninfoblks, self.nbandblks,
-                                                                                   self.ntextblks, self.nblocks))
+            '_read_info: ninfoblks {} nbandblks {} ntextblks {} nblocks {}'.format(
+                self.ninfoblks, self.nbandblks, self.ntextblks, self.nblocks))
         self.title = title.decode('utf-8')
         logging.debug('_read_info: self.title {}'.format(self.title))
         logging.debug('_read_info: self.param {}'.format(self.param))
@@ -595,7 +599,10 @@ class BiffPlugin(AbstractPlugin):
             #     bandnr, pt, self.xsz, self.ysz,
             #     self.xst, self.yst, self.xmg, self.ymg, self.little_endian))
 
-            self.bands[bandnr] = self._init_band(self.pt | (self.col * self.Icolor_mask), self.xsz, self.ysz)
+            self.bands[bandnr] = self._init_band(
+                self.pt | (self.col * self.Icolor_mask),
+                self.xsz,
+                self.ysz)
         # Skip file to beginning of next 512 bytes block
         rest = 0 - 96 - self.nbands * 32
         while rest < 0:
@@ -687,11 +694,14 @@ class BiffPlugin(AbstractPlugin):
         buffer = self.f.read(self._band_size(bandnr))
         if len(dformat) == 2:
             # Unpack as floats, then view as complex
-            arr = np.asarray(struct.unpack(endian + str(2 * ny * nx) + dformat[0], buffer), dtype=dfloat)
+            arr = np.asarray(
+                struct.unpack(endian + str(2 * ny * nx) + dformat[0],buffer),
+                dtype=dfloat)
             band[...] = arr.view(dtype=dtype).reshape(band.shape)
         else:
             band[...] = np.asarray(
-                struct.unpack(endian + str(ny * nx) + dformat[0], buffer), dtype=dtype).reshape(band.shape)
+                struct.unpack(endian + str(ny * nx) + dformat[0], buffer),
+                dtype=dtype).reshape(band.shape)
         return band
 
     def _band_size(self, bn):
@@ -709,7 +719,8 @@ class BiffPlugin(AbstractPlugin):
         pt = pixtyp & self.Ipixtyp_mask
         dtype, _ = self.dtype_from_biff(pt)
         arr = np.array(0, dtype=dtype)
-        # logging.debug('_pixel_size: for {} ({}) is size {} bits'.format(pt, pixtyp, arr.dtype.itemsize * 8))
+        # logging.debug('_pixel_size: for {} ({}) is size {} bits'.format(
+        #     pt, pixtyp, arr.dtype.itemsize * 8))
         return arr.dtype.itemsize * 8
 
     def _endian(self, bandnr):
@@ -781,7 +792,8 @@ class BiffPlugin(AbstractPlugin):
         # logging.debug('_set_info: title {}'.format(title))
         self.param = [0, 0, 0, 0, 0, 0, 0, 0]
         nfreechars = self.ntextblks * 512 - len(self.text)
-        # logging.debug('_set_info: nfreechars {} self.nchars {}'.format(nfreechars, len(self.text)))
+        # logging.debug('_set_info: nfreechars {} self.nchars {}'.format(
+        #     nfreechars, len(self.text)))
 
         # 13 bands in first block, 16 in later ones
         self.ninfoblks = (((self.nbands + 2) // 16) + 1)
@@ -817,8 +829,8 @@ class BiffPlugin(AbstractPlugin):
             ysz, xsz = self.arr.shape[-2:]
             (yst, xst, ymg, xmg) = (1, 1, 1, 1)
             dummy = 0
-            # logging.debug('Band {} pt {} xsz {} ysz {} xst {} yst {} xmg {} ymg {}'.format(bandnr, pt, xsz, ysz,
-            #            xst, yst, xmg, ymg))
+            # logging.debug('Band {} pt {} xsz {} ysz {} xst {} yst {} xmg {} ymg {}'.format(
+            #     bandnr, pt, xsz, ysz, xst, yst, xmg, ymg))
             try:
                 self.f.write(
                     struct.pack(format_band,
