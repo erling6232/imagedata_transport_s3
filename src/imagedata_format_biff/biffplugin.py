@@ -247,8 +247,10 @@ class BiffPlugin(AbstractPlugin):
         #    si.shape = (1,) + si.shape
         # assert si.ndim == 4, "write_3d_series: input dimension %d is not 3D." % (si.ndim-1)
         # if si.shape[0] != 1:
-        #    raise ValueError("Attempt to write 4D image ({}) using write_3d_numpy".format(si.shape))
-        assert si.ndim == 2 or si.ndim == 3, "write_3d_series: input dimension %d is not 2D/3D." % si.ndim
+        #    raise ValueError("Attempt to write 4D image ({}) using write_3d_numpy".format(
+        #        si.shape))
+        assert si.ndim == 2 or si.ndim == 3,\
+            "write_3d_series: input dimension %d is not 2D/3D." % si.ndim
         # slices,ny,nx = si.shape[1:]
         # if slices != si.slices:
         #    raise ValueError(
@@ -339,12 +341,12 @@ class BiffPlugin(AbstractPlugin):
         steps, slices, ny, nx = si.shape[:]
         if steps != len(si.tags[0]):
             raise ValueError(
-                "write_4d_series: tags of dicom template ({}) differ from input array ({}).".format(len(si.tags[0]),
-                                                                                                    steps))
+                "write_4d_series: tags of dicom template ({}) differ "
+                "from input array ({}).".format(len(si.tags[0]), steps))
         if slices != si.slices:
             raise ValueError(
-                "write_4d_series: slices of dicom template ({}) differ from input array ({}).".format(
-                    si.slices, slices))
+                "write_4d_series: slices of dicom template ({}) differ "
+                "from input array ({}).".format(si.slices, slices))
 
         # if not os.path.isdir(directory_name):
         #    os.makedirs(directory_name)
@@ -695,7 +697,7 @@ class BiffPlugin(AbstractPlugin):
         if len(dformat) == 2:
             # Unpack as floats, then view as complex
             arr = np.asarray(
-                struct.unpack(endian + str(2 * ny * nx) + dformat[0],buffer),
+                struct.unpack(endian + str(2 * ny * nx) + dformat[0], buffer),
                 dtype=dfloat)
             band[...] = arr.view(dtype=dtype).reshape(band.shape)
         else:
