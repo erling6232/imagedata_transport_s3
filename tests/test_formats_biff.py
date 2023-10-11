@@ -50,7 +50,7 @@ class Test3DBiffPlugin(unittest.TestCase):
     # @unittest.skip("skipping test_read_single_file")
     def test_read_single_file(self):
         logger = logging.getLogger()
-        logger.setLevel('DEBUG')
+        # logger.setLevel('DEBUG')
         si1 = Series(
             os.path.join('data', 'biff', 'time', 'time00.biff'),
             'none',
