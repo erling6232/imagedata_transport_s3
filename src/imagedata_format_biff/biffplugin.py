@@ -110,6 +110,8 @@ class BiffPlugin(AbstractPlugin):
         if hdr.input_order == 'auto':
             hdr.input_order = 'none'
 
+        hdr.color = False
+
         try:
             self._read_info()
         except imagedata.formats.NotImageError:
