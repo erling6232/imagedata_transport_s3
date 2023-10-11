@@ -14,14 +14,16 @@ import imagedata.formats
 from imagedata.series import Series
 
 from imagedata import plugins
-sys.path.append(os.path.abspath('src'))
-from imagedata_format_biff.biffplugin import BiffPlugin
+sys.path.append(os.path.abspath('../src'))
+from src.imagedata_format_biff.biffplugin import BiffPlugin
 plugin_type = 'format'
 plugin_name = BiffPlugin.name + 'format'
 class_name = BiffPlugin.name
 pclass = BiffPlugin
 plugins[plugin_type].append((plugin_name, class_name, pclass))
 
+# import mimetypes
+# mimetypes.add_type('application/biff', '.biff')
 
 class Test3DBiffPlugin(unittest.TestCase):
     def setUp(self):
@@ -47,6 +49,8 @@ class Test3DBiffPlugin(unittest.TestCase):
 
     # @unittest.skip("skipping test_read_single_file")
     def test_read_single_file(self):
+        logger = logging.getLogger()
+        logger.setLevel('DEBUG')
         si1 = Series(
             os.path.join('data', 'biff', 'time', 'time00.biff'),
             'none',
