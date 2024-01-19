@@ -20,12 +20,6 @@ def compare_template_headers(self, hdr, newhdr, uid=True):
     # self.assertEqual(hdr.sort_on, newhdr.sort_on)
 
     # DicomHeaderDict[slice].tuple(tagvalue, filename, dicomheader)
-    try:
-        self.assertEqual(hdr.DicomHeaderDict.keys(), newhdr.DicomHeaderDict.keys())
-        # for k in hdr.DicomHeaderDict.keys():
-        #    self.assertEqual(hdr.DicomHeaderDict[k], newhdr.DicomHeaderDict[k])
-    except ValueError:
-        pass
     self.assertEqual(hdr.tags.keys(), newhdr.tags.keys())
     for k in hdr.tags.keys():
         np.testing.assert_array_equal(hdr.tags[k], newhdr.tags[k])

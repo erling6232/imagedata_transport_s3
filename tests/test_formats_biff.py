@@ -129,6 +129,18 @@ class Test3DBiffPlugin(unittest.TestCase):
         self.assertEqual(si1.dtype, si2.dtype)
         self.assertEqual(si1.shape, si2.shape)
 
+    def test_read_samle(self):
+        template = Series('data/dicom/template')
+        si1 = Series(
+            os.path.join('data', 'biff', 'samle'),
+            'none',
+            self.opts,
+            template=template)
+        self.assertEqual((11, 128, 128), si1.shape)
+        with tempfile.TemporaryDirectory() as d:
+            si1.write(d, formats=['dicom'])
+            si2 = Series(d)
+
     # @unittest.skip("skipping test_read_3d_biff")
     def test_read_3d_biff(self):
         si1 = Series(
