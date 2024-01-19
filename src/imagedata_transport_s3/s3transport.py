@@ -52,11 +52,6 @@ class S3Transport(AbstractTransport):
         super(S3Transport, self).__init__(self.name, self.description,
                                           self.authors, self.version, self.url, self.schemes)
 
-    def close(self):
-        """Close the transport
-        """
-        pass
-
     def walk(self, top):
         """Generate the file names in a directory tree by walking the tree.
         Input:
