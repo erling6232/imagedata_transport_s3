@@ -3,7 +3,7 @@
 
 # Copyright (c) 2024 Erling Andersen, Haukeland University Hospital, Bergen, Norway
 
-import os.path
+# import os.path
 from minio import Minio
 import urllib
 import logging
@@ -91,7 +91,9 @@ class S3Transport(AbstractTransport):
             bucket = root_split[1]
         except IndexError:
             raise ValueError('No bucket given in URL {}'.format(root))
-        destination = "/".join(root_split[2:]) if len(root_split) > 2 and len(root_split[2]) else None
+        self.destination = "/".join(root_split[2:]) \
+            if len(root_split) > 2 and len(root_split[2]) \
+            else None
         self.__mode = mode
         self.__local = False
         self.__must_upload = False
