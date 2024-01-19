@@ -15,11 +15,11 @@ from imagedata.series import Series
 
 from imagedata import plugins
 sys.path.append(os.path.abspath('../src'))
-from src.imagedata_format_biff.biffplugin import BiffPlugin
-plugin_type = 'format'
-plugin_name = BiffPlugin.name + 'format'
-class_name = BiffPlugin.name
-pclass = BiffPlugin
+from src.imagedata_transport_s3.s3transport import S3Transport
+plugin_type = 'transport'
+plugin_name = S3Transport.name + 'transport'
+class_name = S3Transport.name
+pclass = S3Transport
 plugins[plugin_type].append((plugin_name, class_name, pclass))
 
 # import mimetypes
