@@ -1,5 +1,5 @@
 ######################
-imagedata-transport_s3
+imagedata-transport-s3
 ######################
 
 |Docs Badge| |buildstatus|  |coverage| |pypi|
