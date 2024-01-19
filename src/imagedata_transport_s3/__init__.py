@@ -1,4 +1,4 @@
-"""imagedata_format_biff"""
+"""imagedata_transport_s3"""
 
 import logging
 import mimetypes
@@ -7,7 +7,7 @@ logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 try:
     from importlib.metadata import version
-    __version__ = version('imagedata_format_biff')
+    __version__ = version('imagedata_transport_s3')
 except Exception:
     from . import __path__ as _path
     from os.path import isfile, join
@@ -22,7 +22,3 @@ except Exception:
 
 __author__ = 'Erling Andersen, Haukeland University Hospital, Bergen, Norway'
 __email__ = 'Erling.Andersen@Helse-Bergen.NO'
-
-mimetypes.add_type('application/biff', '.biff')
-mimetypes.add_type('application/biff', '.us')
-mimetypes.add_type('application/biff', '.real')

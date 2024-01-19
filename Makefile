@@ -1,4 +1,4 @@
-MODULE=imagedata_format_biff
+MODULE=imagedata_transport_s3
 
 all:	sdist test
 
@@ -27,4 +27,4 @@ html:
 	make html
 
 test_install:
-	pip install --upgrade --index-url https://test.pypi.org/simple/ imagedata_format_biff
+	pip install --upgrade --index-url https://test.pypi.org/simple/ imagedata_transport_s3
