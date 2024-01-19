@@ -1,7 +1,6 @@
 """imagedata_transport_s3"""
 
 import logging
-import mimetypes
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
