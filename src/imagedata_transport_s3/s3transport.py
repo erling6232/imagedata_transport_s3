@@ -4,6 +4,7 @@
 # Copyright (c) 2024 Erling Andersen, Haukeland University Hospital, Bergen, Norway
 
 # import os.path
+from minio import Minio
 # import logging
 # import struct
 # import numpy as np
@@ -51,6 +52,16 @@ class S3Transport(AbstractTransport):
     def __init__(self, netloc=None, root=None, mode='r', read_directory_only=False, opts=None):
         super(S3Transport, self).__init__(self.name, self.description,
                                           self.authors, self.version, self.url, self.schemes)
+        self.client = Minio(
+            "play.min.io",
+            access_key="Q3AM3UQ867SPQQA43P2F",
+            secret_key="zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG",
+            cert_check=False
+        )
+        if self.client.bucket_exists("imagedata_transport_s3"):
+            print('Bucket exists')
+        else:
+            print('Bucket do not exist')
 
     def walk(self, top):
         """Generate the file names in a directory tree by walking the tree.

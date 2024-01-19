@@ -3,6 +3,7 @@
 import unittest
 import sys
 import os.path
+import minio
 import numpy as np
 import logging
 import argparse
@@ -27,6 +28,8 @@ plugins[plugin_type].append((plugin_name, class_name, pclass))
 
 class Test3DBiffPlugin(unittest.TestCase):
     def setUp(self):
+        client = Minio("www-236.medtek.haukeland.no", access_key="JCM5UlUfu4wTcwjO", secret_key="Rmi0pMS4a2S7SllNsh6Yn9lk0r2NJcga", cert_check=False)
+
         parser = argparse.ArgumentParser()
         imagedata.cmdline.add_argparse_options(parser)
 
