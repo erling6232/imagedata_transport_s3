@@ -3,13 +3,13 @@
 
 # Copyright (c) 2024 Erling Andersen, Haukeland University Hospital, Bergen, Norway
 
-import os.path
-import logging
-import struct
-import numpy as np
-
-import imagedata.formats
-import imagedata.axis
+# import os.path
+# import logging
+# import struct
+# import numpy as np
+#
+# import imagedata.formats
+# import imagedata.axis
 from imagedata.transports.abstracttransport import AbstractTransport
 
 
@@ -50,7 +50,7 @@ class S3Transport(AbstractTransport):
 
     def __init__(self, netloc=None, root=None, mode='r', read_directory_only=False, opts=None):
         super(S3Transport, self).__init__(self.name, self.description,
-                                            self.authors, self.version, self.url, self.schemes)
+                                          self.authors, self.version, self.url, self.schemes)
 
     def close(self):
         """Close the transport
