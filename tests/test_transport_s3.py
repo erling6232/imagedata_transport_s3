@@ -39,8 +39,8 @@ class TestS3TransportPlugin(unittest.TestCase):
         host = 'play.min.io:9443'
         access_key = 'Q3AM3UQ867SPQQA43P2F'
         secret_key = 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG'
-        bucket = 'imagedata_transport_s3'
-        d = 's3://{}:{}@{}/{}/data/time00'.format(
+        bucket = 'imagedataTransportS3'
+        d = 's3://{}:{}@{}/{}/time00'.format(
             access_key,
             secret_key,
             host,
