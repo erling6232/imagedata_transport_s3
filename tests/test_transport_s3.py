@@ -41,7 +41,7 @@ class TestS3TransportPlugin(unittest.TestCase):
         secret_key = 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG'
         bucket = 'imagedata-transport-s3'
         # bucket = 'my-bucketname'
-        d = 's3://{}:{}@{}/{}/time00'.format(
+        d = 's3://{}:{}@{}/{}/time00.zip'.format(
             access_key,
             secret_key,
             host,
