@@ -1,6 +1,6 @@
 """Read/Write image files in S3/Minio storage.
 """
-
+import minio.error
 # Copyright (c) 2024 Erling Andersen, Haukeland University Hospital, Bergen, Norway
 
 # import os.path
@@ -105,14 +105,18 @@ class S3Transport(AbstractTransport):
             secret_key=opts['password'],
             cert_check=False
         )
-        if self.client.bucket_exists(bucket):
+        try:
+            if self.client.bucket_exists(bucket):
 
-            print('Bucket exists')
-        else:
+                print('Bucket exists')
+            else:
+                if mode[0] == 'r':
+                    raise RootDoesNotExist("Bucket ({}) does not exist".format(bucket))
+                    raise
+                print('Bucket do not exist')
+        except minio.error.S3Error:
             if mode[0] == 'r':
                 raise RootDoesNotExist("Bucket ({}) does not exist".format(bucket))
-                raise
-            print('Bucket do not exist')
 
     def walk(self, top):
         """Generate the file names in a directory tree by walking the tree.
@@ -131,7 +135,7 @@ class S3Transport(AbstractTransport):
     def open(self, path, mode='r'):
         """Extract a member from the archive as a file-like object.
         """
-        pass
+        raise NotImplementedError('S3Transport.open is not implemented')
 
     def close(self):
         """Close the transport
