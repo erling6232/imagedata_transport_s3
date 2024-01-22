@@ -3,10 +3,13 @@
 import minio.error
 # Copyright (c) 2024 Erling Andersen, Haukeland University Hospital, Bergen, Norway
 
-# import os.path
+import os.path
+import io
 from minio import Minio
 import urllib
 import logging
+import tempfile
+import shutil
 # import struct
 # import numpy as np
 #
@@ -98,6 +101,7 @@ class S3Transport(AbstractTransport):
         self.__local = False
         self.__must_upload = False
         self.__tmpdir = None
+        self.__zipfile = None
 
         self.client = Minio(
             self.netloc,
@@ -105,6 +109,7 @@ class S3Transport(AbstractTransport):
             secret_key=opts['password'],
             cert_check=False
         )
+        self.bucket = bucket
         try:
             if self.client.bucket_exists(bucket):
 
@@ -112,11 +117,15 @@ class S3Transport(AbstractTransport):
             else:
                 if mode[0] == 'r':
                     raise RootDoesNotExist("Bucket ({}) does not exist".format(bucket))
-                    raise
-                print('Bucket do not exist')
+                else:
+                    self.client.make_bucket(bucket)
+                print('Bucket "{}" is created'.format(bucket))
         except minio.error.S3Error:
             if mode[0] == 'r':
                 raise RootDoesNotExist("Bucket ({}) does not exist".format(bucket))
+            else:
+                self.client.make_bucket(bucket)
+            print('Bucket "{}" is created'.format(bucket))
 
     def walk(self, top):
         """Generate the file names in a directory tree by walking the tree.
@@ -135,12 +144,34 @@ class S3Transport(AbstractTransport):
     def open(self, path, mode='r'):
         """Extract a member from the archive as a file-like object.
         """
-        raise NotImplementedError('S3Transport.open is not implemented')
+        if mode[0] == 'r' and not self.__local:
+            raise NotImplementedError('S3Transport.open read is not implemented')
+        elif mode[0] == 'w' and not self.__local:
+            self.__tmpdir = tempfile.mkdtemp()
+            self.__zipfile = os.path.join(self.__tmpdir, 'upload.zip')
+            self.__local = True
+            self.__must_upload = True
+        if self.__local:
+            return io.FileIO(self.__zipfile, mode)
+        else:
+            raise IOError('Could not download bucket "{}"'.format(self.bucket))
 
     def close(self):
         """Close the transport
         """
-        pass
+        if self.__must_upload:
+            # Upload zip file to S3 server
+            logger.debug('Upload to bucket "{}"'.format(self.bucket))
+            result = self.client.fput_object(bucket_name=self.bucket,
+                                             object_name="newname",
+                                             file_path=self.__zipfile,
+                                             content_type="application/zip"
+                                             )
+            logger.debug('Upload created {}; etag: {}, version-id: {}'.format(
+                result.object_name, result.etag, result.version_id
+            ))
+        if self.__tmpdir is not None:
+            shutil.rmtree(self.__tmpdir)
 
     def info(self, path) -> str:
         """Return info describing the object
