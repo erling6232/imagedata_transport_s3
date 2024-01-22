@@ -160,6 +160,7 @@ class S3Transport(AbstractTransport):
             print('Open "w" path:', path)
             self.__tmpdir = tempfile.mkdtemp()
             self.__zipfile = os.path.join(self.__tmpdir, 'upload.zip')
+            self.__path = path
             self.__local = True
             self.__must_upload = True
             print('Write ', self.__zipfile)
@@ -177,7 +178,7 @@ class S3Transport(AbstractTransport):
             logger.debug('Upload to bucket "{}"'.format(self.bucket))
             try:
                 result = self.client.fput_object(bucket_name=self.bucket,
-                                                 object_name="newname",
+                                                 object_name=self.__path,
                                                  file_path=self.__zipfile,
                                                  content_type="application/zip"
                                                  )
