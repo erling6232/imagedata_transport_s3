@@ -134,18 +134,28 @@ class S3Transport(AbstractTransport):
         Return:
         - tuples of (root, dirs, files)
         """
-        pass
+        raise NotImplementedError('S3Transport.walk is not implemented')
 
     def isfile(self, path):
         """Return True if path is an existing regular file.
         """
-        pass
+        raise NotImplementedError('S3Transport.isfile is not implemented')
 
     def open(self, path, mode='r'):
         """Extract a member from the archive as a file-like object.
         """
         if mode[0] == 'r' and not self.__local:
-            raise NotImplementedError('S3Transport.open read is not implemented')
+            if len(path) == 0:
+                raise FileNotFoundError('Empty filename "{}" not found.'.format(path))
+            self.__tmpdir = tempfile.mkdtemp()
+            self.__zipfile = os.path.join(self.__tmpdir, path)
+            self.client.fget_object(
+                bucket_name=self.bucket,
+                object_name=path,
+                file_path=self.__zipfile
+            )
+            self.__local = True
+
         elif mode[0] == 'w' and not self.__local:
             self.__tmpdir = tempfile.mkdtemp()
             self.__zipfile = os.path.join(self.__tmpdir, 'upload.zip')
@@ -182,4 +192,4 @@ class S3Transport(AbstractTransport):
         Returns:
             description (str): Preferably a one-line string describing the object
         """
-        pass
+        raise NotImplementedError('S3Transport.info is not implemented')
