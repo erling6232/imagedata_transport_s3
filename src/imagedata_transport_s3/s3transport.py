@@ -161,6 +161,7 @@ class S3Transport(AbstractTransport):
             self.__zipfile = os.path.join(self.__tmpdir, 'upload.zip')
             self.__local = True
             self.__must_upload = True
+            print('Write ', self.__zipfile)
         if self.__local:
             return io.FileIO(self.__zipfile, mode)
         else:
@@ -171,12 +172,16 @@ class S3Transport(AbstractTransport):
         """
         if self.__must_upload:
             # Upload zip file to S3 server
+            print('Upload to bucket "{}"'.format(self.bucket))
             logger.debug('Upload to bucket "{}"'.format(self.bucket))
             result = self.client.fput_object(bucket_name=self.bucket,
                                              object_name="newname",
                                              file_path=self.__zipfile,
                                              content_type="application/zip"
                                              )
+            print('Upload created {}; etag: {}, version-id: {}'.format(
+                result.object_name, result.etag, result.version_id
+            ))
             logger.debug('Upload created {}; etag: {}, version-id: {}'.format(
                 result.object_name, result.etag, result.version_id
             ))
