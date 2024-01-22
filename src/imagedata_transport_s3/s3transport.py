@@ -157,6 +157,7 @@ class S3Transport(AbstractTransport):
             self.__local = True
 
         elif mode[0] == 'w' and not self.__local:
+            print('Open "w" path:', path)
             self.__tmpdir = tempfile.mkdtemp()
             self.__zipfile = os.path.join(self.__tmpdir, 'upload.zip')
             self.__local = True
@@ -174,17 +175,21 @@ class S3Transport(AbstractTransport):
             # Upload zip file to S3 server
             print('Upload to bucket "{}"'.format(self.bucket))
             logger.debug('Upload to bucket "{}"'.format(self.bucket))
-            result = self.client.fput_object(bucket_name=self.bucket,
-                                             object_name="newname",
-                                             file_path=self.__zipfile,
-                                             content_type="application/zip"
-                                             )
-            print('Upload created {}; etag: {}, version-id: {}'.format(
-                result.object_name, result.etag, result.version_id
-            ))
-            logger.debug('Upload created {}; etag: {}, version-id: {}'.format(
-                result.object_name, result.etag, result.version_id
-            ))
+            try:
+                result = self.client.fput_object(bucket_name=self.bucket,
+                                                 object_name="newname",
+                                                 file_path=self.__zipfile,
+                                                 content_type="application/zip"
+                                                 )
+                print('Upload created {}; etag: {}, version-id: {}'.format(
+                    result.object_name, result.etag, result.version_id
+                ))
+                logger.debug('Upload created {}; etag: {}, version-id: {}'.format(
+                    result.object_name, result.etag, result.version_id
+                ))
+            except Exception as e:
+                print('Upload exception: {}'.format(e))
+                raise
         if self.__tmpdir is not None:
             shutil.rmtree(self.__tmpdir)
 
