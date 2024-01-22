@@ -3,10 +3,10 @@
 import unittest
 import sys
 import os.path
-import numpy as np
-import logging
-import argparse
-import tempfile
+# import numpy as np
+# import logging
+# import argparse
+# import tempfile
 #from .context import imagedata
 import imagedata.cmdline
 import imagedata.readdata
@@ -27,7 +27,7 @@ plugins[plugin_type].append((plugin_name, class_name, pclass))
 
 class TestS3TransportPlugin(unittest.TestCase):
     def setUp(self):
-        plugins = imagedata.transports.get_transports_list()
+        plugins = imagedata.transports.get_transporter_list()
         self.s3_plugin = None
         for pname, ptype, pclass in plugins:
             if ptype == 's3':
