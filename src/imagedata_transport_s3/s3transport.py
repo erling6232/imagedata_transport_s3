@@ -1,62 +1,39 @@
 """Read/Write image files in S3/Minio storage.
 """
-import minio.error
 # Copyright (c) 2024 Erling Andersen, Haukeland University Hospital, Bergen, Norway
 
+from typing import List, Optional
 import os.path
 import io
 from minio import Minio
+import minio.error
 import urllib
 import logging
 import tempfile
 import shutil
-# import struct
-# import numpy as np
-#
-# import imagedata.formats
-# import imagedata.axis
 from imagedata.transports.abstracttransport import AbstractTransport
-from imagedata.transports import RootDoesNotExist
 
 logger = logging.getLogger(__name__)
-
-
-class PixelTypeNotSupported(Exception):
-    """Thrown when pixel type is not supported.
-    """
-    pass
-
-
-class VaryingImageSize(Exception):
-    """Thrown when the bands are of varying size.
-    """
-    pass
-
-
-class NoBands(Exception):
-    """Thrown when no bands are defined.
-    """
-    pass
-
-
-class BadShapeGiven(Exception):
-    """Thrown when input_shape is not like (t)x(z).
-    """
-    pass
 
 
 class S3Transport(AbstractTransport):
     """Read/write from S3/Minio storage.
     """
 
-    name = "s3"
-    description = "Read and write from S3/Minio storage."
-    authors = "Erling Andersen"
-    version = "1.0.0"
-    url = "www.helse-bergen.no"
-    schemes = ["s3"]
+    name: str = "s3"
+    description: str = "Read and write from S3/Minio storage."
+    authors: str = "Erling Andersen"
+    version: str = "1.0.0"
+    url: str = "www.helse-bergen.no"
+    schemes: List[str] = ["s3"]
+    mimetype: str = "application/zip"  # Determines archive plugin
 
-    def __init__(self, netloc=None, root=None, mode='r', read_directory_only=False, opts=None):
+    def __init__(self,
+                 netloc: Optional[str] = None,
+                 root: Optional[str] = None,
+                 mode: Optional[str] = 'r',
+                 read_directory_only: Optional[bool] = False,
+                 opts: Optional[dict] = None):
         super(S3Transport, self).__init__(self.name, self.description,
                                           self.authors, self.version, self.url, self.schemes)
         # self.client = Minio(
@@ -88,7 +65,7 @@ class S3Transport(AbstractTransport):
                 opts['password'] = None
         else:
             self.netloc = netloc
-        logger.debug("XnatTransport __init__ root: {}".format(root))
+        logger.debug("S3Transport __init__ root: {}".format(root))
         root_split = root.split('/')
         try:
             bucket = root_split[1]
@@ -116,13 +93,13 @@ class S3Transport(AbstractTransport):
                 print('Bucket exists')
             else:
                 if mode[0] == 'r':
-                    raise RootDoesNotExist("Bucket ({}) does not exist".format(bucket))
+                    raise FileNotFoundError("Bucket ({}) does not exist".format(bucket))
                 else:
                     self.client.make_bucket(bucket)
                 print('Bucket "{}" is created'.format(bucket))
         except minio.error.S3Error:
             if mode[0] == 'r':
-                raise RootDoesNotExist("Bucket ({}) does not exist".format(bucket))
+                raise FileNotFoundError("Bucket ({}) does not exist".format(bucket))
             else:
                 self.client.make_bucket(bucket)
             print('Bucket "{}" is created'.format(bucket))
@@ -140,6 +117,11 @@ class S3Transport(AbstractTransport):
         """Return True if path is an existing regular file.
         """
         raise NotImplementedError('S3Transport.isfile is not implemented')
+
+    def exists(self, path):
+        """Return True if the named path exists.
+        """
+        raise NotImplementedError('S3Transport.exists is not implemented')
 
     def open(self, path, mode='r'):
         """Extract a member from the archive as a file-like object.
