@@ -84,7 +84,7 @@ class S3Transport(AbstractTransport):
             self.netloc,
             access_key=opts['username'],
             secret_key=opts['password'],
-            cert_check=False
+            cert_check=True
         )
         self.bucket = bucket
         try:
