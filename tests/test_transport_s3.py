@@ -50,7 +50,7 @@ class TestS3TransportPlugin(unittest.TestCase):
         # Remove a prefix recursively.
         delete_object_list = map(
             lambda x: DeleteObject(x.object_name),
-            client.list_objects(bucket, ".", recursive=True),
+            client.list_objects(bucket, "/", recursive=True),
         )
         errors = client.remove_objects(bucket, delete_object_list)
         for error in errors:
