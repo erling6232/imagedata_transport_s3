@@ -88,10 +88,7 @@ class S3Transport(AbstractTransport):
         )
         self.bucket = bucket
         try:
-            if self.client.bucket_exists(bucket):
-
-                print('Bucket exists')
-            else:
+            if not self.client.bucket_exists(bucket):
                 if mode[0] == 'r':
                     raise FileNotFoundError("Bucket ({}) does not exist".format(bucket))
                 else:
@@ -124,34 +121,38 @@ class S3Transport(AbstractTransport):
         """
         raise NotImplementedError('S3Transport.exists is not implemented')
 
-    def open(self, path, mode='r'):
-        """Extract a member from the archive as a file-like object.
-        """
+    def _get_bucket_and_object(self, path):
         path_split = path.split('/')
         try:
             bucket = path_split[1]
-            path = '/'.join(path_split[2:])
+            obj = '/'.join(path_split[2:])
         except IndexError:
             raise ValueError('No bucket given in URL {}'.format(path))
-        print('S3Transport.open: bucket: "{}", path ({}): "{}"'.format(bucket, type(path), path))
+        print('S3Transport.open: bucket: "{}", object ({}): "{}"'.format(bucket, type(obj), obj))
+        return bucket, obj
+
+    def open(self, path, mode='r'):
+        """Extract a member from the archive as a file-like object.
+        """
+        bucket, obj = self._get_bucket_and_object(path)
 
         if mode[0] == 'r' and not self.__local:
-            if len(path) == 0:
-                raise FileNotFoundError('Empty filename "{}" not found.'.format(path))
+            if len(obj) == 0:
+                raise FileNotFoundError('Empty filename "{}" not found.'.format(obj))
             self.__tmpdir = tempfile.mkdtemp()
-            self.__zipfile = os.path.join(self.__tmpdir, path)
+            self.__zipfile = os.path.join(self.__tmpdir, obj)
             self.client.fget_object(
                 bucket_name=self.bucket,
-                object_name=path,
+                object_name=obj,
                 file_path=self.__zipfile
             )
             self.__local = True
 
         elif mode[0] == 'w' and not self.__local:
-            print('Open "w" path:', path)
+            print('Open "w" path:', obj)
             self.__tmpdir = tempfile.mkdtemp()
             self.__zipfile = os.path.join(self.__tmpdir, 'upload.zip')
-            self.__path = path
+            self.__path = obj
             self.__local = True
             self.__must_upload = True
             print('Write ', self.__zipfile)
