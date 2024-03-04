@@ -119,6 +119,8 @@ class S3Transport(AbstractTransport):
     def exists(self, path):
         """Return True if the named path exists.
         """
+        bucket, obj = self._get_bucket_and_object(path)
+        result = self.client.stat_object(bucket, obj)
         raise NotImplementedError('S3Transport.exists is not implemented')
 
     def _get_bucket_and_object(self, path):
@@ -128,6 +130,8 @@ class S3Transport(AbstractTransport):
             obj = '/'.join(path_split[2:])
         except IndexError:
             raise ValueError('No bucket given in URL {}'.format(path))
+        if self.bucket != bucket:
+            raise FileNotFoundError('Bucket {} is not open'.format(bucket))
         logger.debug('S3Transport.open: bucket: "{}", object ({}): "{}"'.format(
             bucket, type(obj), obj))
         return bucket, obj

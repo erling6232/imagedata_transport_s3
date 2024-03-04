@@ -67,6 +67,16 @@ class TestS3TransportPlugin(unittest.TestCase):
         else:
             logger.debug('_delete_bucket: Bucket does not exist')
 
+    def test_file_not_exist(self):
+        d = 's3://{}:{}@{}/{}/time00.zip'.format(
+            access_key,
+            secret_key,
+            host,
+            bucket
+        )
+        transport = S3Transport(netloc=host, root='/{}'.format(bucket))
+        exist = transport.exists('/{}/nofile'.format(bucket))
+
     def test_write_reread_single_file(self):
         si1 = Series(os.path.join('data', 'time00', 'Image_00019.dcm'))
         d = 's3://{}:{}@{}/{}/time00.zip'.format(
