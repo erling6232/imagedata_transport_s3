@@ -128,7 +128,8 @@ class S3Transport(AbstractTransport):
             obj = '/'.join(path_split[2:])
         except IndexError:
             raise ValueError('No bucket given in URL {}'.format(path))
-        logger.debug('S3Transport.open: bucket: "{}", object ({}): "{}"'.format(bucket, type(obj), obj))
+        logger.debug('S3Transport.open: bucket: "{}", object ({}): "{}"'.format(
+            bucket, type(obj), obj))
         return bucket, obj
 
     def open(self, path, mode='r'):
