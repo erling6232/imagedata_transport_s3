@@ -52,7 +52,9 @@ class TestS3TransportPlugin(unittest.TestCase):
             lambda x: DeleteObject(x.object_name),
             client.list_objects(bucket, ".", recursive=True),
         )
-        print('_delete_bucket delete_object_list: {}'.format(delete_object_list))
+        print('_delete_bucket delete_object_list:')
+        for obj in delete_object_list:
+            print('  {}'.format(obj))
         errors = client.remove_objects(bucket, delete_object_list)
         for error in errors:
             print("error occurred when deleting object", error)
