@@ -44,6 +44,9 @@ class TestS3TransportPlugin(unittest.TestCase):
         self.assertIsNotNone(self.s3_plugin)
         self._delete_bucket()
 
+    def tearDown(self):
+        self._delete_bucket()
+
     def _delete_bucket(self):
         client = Minio(host, access_key, secret_key, cert_check=True)
 
@@ -63,20 +66,14 @@ class TestS3TransportPlugin(unittest.TestCase):
         else:
             print('_delete_bucket: Bucket does not exist')
 
-    def test_write_single_file(self):
+    def test_write_reread_single_file(self):
         si1 = Series(os.path.join('data', 'time00', 'Image_00019.dcm'))
-        # host = 'play.min.io:9443'
-        # access_key = 'Q3AM3UQ867SPQQA43P2F'
-        # secret_key = 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG'
-        # bucket = 'imagedata-transport-s3'
-        # bucket = 'my-bucketname'
         d = 's3://{}:{}@{}/{}/time00.zip'.format(
             access_key,
             secret_key,
             host,
             bucket
         )
-        print('Save to: {}'.format(d))
         si1.write(d, formats=['dicom'])
         si2 = Series(d)
         self.assertEqual(si1.dtype, si2.dtype)

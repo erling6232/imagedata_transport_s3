@@ -13,11 +13,11 @@ jobs:
         
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@master
       with:
         ref: ${{ github.ref }}
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@master
       with:
         python-version: ${{ matrix.python-version }}
         # cache: "pip"
@@ -50,12 +50,12 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         slug: erling6232/imagedata_transport_s3
     - name: Archive code coverage html report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: code-coverage-report
         path: htmlcov
     #- name: Archive package
-    #  uses: actions/upload-artifact@v3
+    #  uses: actions/upload-artifact@v4
     #  with:
     #    name: imagedata
     #    path: src/dist    
