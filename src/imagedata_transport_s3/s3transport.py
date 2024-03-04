@@ -43,9 +43,9 @@ class S3Transport(AbstractTransport):
         #     cert_check=False
         # )
         # if self.client.bucket_exists("imagedata_transport_s3"):
-        #     print('Bucket exists')
+        #     logger.debug('Bucket exists')
         # else:
-        #     print('Bucket do not exist')
+        #     logger.debug('Bucket do not exist')
         if opts is None:
             opts = {}
         self.read_directory_only = read_directory_only
@@ -93,14 +93,14 @@ class S3Transport(AbstractTransport):
                     raise FileNotFoundError("Bucket ({}) does not exist".format(bucket))
                 else:
                     self.client.make_bucket(bucket)
-                print('Bucket "{}" is created'.format(bucket))
+                logger.debug('Bucket "{}" is created'.format(bucket))
         except minio.error.S3Error:
-            print('After except minio.error.S3Error:')
+            logger.debug('After except minio.error.S3Error:')
             if mode[0] == 'r':
                 raise FileNotFoundError("Bucket ({}) does not exist".format(bucket))
             else:
                 self.client.make_bucket(bucket)
-            print('Bucket "{}" is created'.format(bucket))
+            logger.debug('Bucket "{}" is created'.format(bucket))
 
     def walk(self, top):
         """Generate the file names in a directory tree by walking the tree.
@@ -128,7 +128,7 @@ class S3Transport(AbstractTransport):
             obj = '/'.join(path_split[2:])
         except IndexError:
             raise ValueError('No bucket given in URL {}'.format(path))
-        print('S3Transport.open: bucket: "{}", object ({}): "{}"'.format(bucket, type(obj), obj))
+        logger.debug('S3Transport.open: bucket: "{}", object ({}): "{}"'.format(bucket, type(obj), obj))
         return bucket, obj
 
     def open(self, path, mode='r'):
@@ -149,13 +149,13 @@ class S3Transport(AbstractTransport):
             self.__local = True
 
         elif mode[0] == 'w' and not self.__local:
-            print('Open "w" path:', obj)
+            logger.debug('Open "w" path:', obj)
             self.__tmpdir = tempfile.mkdtemp()
             self.__zipfile = os.path.join(self.__tmpdir, 'upload.zip')
             self.__path = obj
             self.__local = True
             self.__must_upload = True
-            print('Write ', self.__zipfile)
+            logger.debug('Write ', self.__zipfile)
         if self.__local:
             return io.FileIO(self.__zipfile, mode)
         else:
@@ -166,7 +166,7 @@ class S3Transport(AbstractTransport):
         """
         if self.__must_upload:
             # Upload zip file to S3 server
-            print('Upload to bucket "{}"'.format(self.bucket))
+            logger.debug('Upload to bucket "{}"'.format(self.bucket))
             logger.debug('Upload to bucket "{}"'.format(self.bucket))
             try:
                 result = self.client.fput_object(bucket_name=self.bucket,
@@ -174,14 +174,14 @@ class S3Transport(AbstractTransport):
                                                  file_path=self.__zipfile,
                                                  content_type="application/zip"
                                                  )
-                print('Upload created {}; etag: {}, version-id: {}'.format(
+                logger.debug('Upload created {}; etag: {}, version-id: {}'.format(
                     result.object_name, result.etag, result.version_id
                 ))
                 logger.debug('Upload created {}; etag: {}, version-id: {}'.format(
                     result.object_name, result.etag, result.version_id
                 ))
             except Exception as e:
-                print('Upload exception: {}'.format(e))
+                logger.debug('Upload exception: {}'.format(e))
                 raise
         if self.__tmpdir is not None:
             shutil.rmtree(self.__tmpdir)

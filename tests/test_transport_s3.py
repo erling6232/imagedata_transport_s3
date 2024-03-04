@@ -3,11 +3,7 @@
 import unittest
 import sys
 import os.path
-# import numpy as np
-# import logging
-# import argparse
-# import tempfile
-#from .context import imagedata
+import logging
 from minio import Minio
 from minio.deleteobjects import DeleteObject
 from minio.error import S3Error
@@ -24,6 +20,8 @@ plugin_name = S3Transport.name + 'transport'
 class_name = S3Transport.name
 pclass = S3Transport
 plugins[plugin_type].append((plugin_name, class_name, pclass))
+
+logger = logging.getLogger(__name__)
 
 # import mimetypes
 # mimetypes.add_type('application/biff', '.biff')
@@ -56,15 +54,18 @@ class TestS3TransportPlugin(unittest.TestCase):
             client.list_objects(bucket, recursive=True),
         )
         errors = client.remove_objects(bucket, delete_object_list)
-        for error in errors:
-            print("error occurred when deleting object", error)
+        try:
+            for error in errors:
+                logger.error("error occurred when deleting object {}".format(error))
+        except S3Error:
+            pass
 
-        print('_delete_bucket: verify bucket: {}'.format(bucket))
+        logger.debug('_delete_bucket: verify bucket: {}'.format(bucket))
         if client.bucket_exists(bucket):
-            print('_delete_bucket: Bucket exists')
+            logger.debug('_delete_bucket: Bucket exists')
             client.remove_bucket(bucket)
         else:
-            print('_delete_bucket: Bucket does not exist')
+            logger.debug('_delete_bucket: Bucket does not exist')
 
     def test_write_reread_single_file(self):
         si1 = Series(os.path.join('data', 'time00', 'Image_00019.dcm'))
