@@ -45,6 +45,7 @@ class TestS3TransportPlugin(unittest.TestCase):
 
     def _delete_bucket(self):
         client = Minio(host, access_key, secret_key, cert_check=True)
+        print('_delete_bucket: verify bucket: {}'.format(bucket))
         if client.bucket_exists(bucket):
             print('_delete_bucket: Bucket exists')
             client.remove_bucket(bucket)
