@@ -98,6 +98,7 @@ class S3Transport(AbstractTransport):
                     self.client.make_bucket(bucket)
                 print('Bucket "{}" is created'.format(bucket))
         except minio.error.S3Error:
+            print('After except minio.error.S3Error:')
             if mode[0] == 'r':
                 raise FileNotFoundError("Bucket ({}) does not exist".format(bucket))
             else:
