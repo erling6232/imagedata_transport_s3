@@ -8,6 +8,8 @@ import os.path
 # import argparse
 # import tempfile
 #from .context import imagedata
+from minio import Minio
+from minio.error import S3Error
 import imagedata.cmdline
 import imagedata.readdata
 import imagedata.transports
@@ -25,6 +27,12 @@ plugins[plugin_type].append((plugin_name, class_name, pclass))
 # import mimetypes
 # mimetypes.add_type('application/biff', '.biff')
 
+host = 'play.min.io:9443'
+access_key = 'Q3AM3UQ867SPQQA43P2F'
+secret_key = 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG'
+bucket = 'imagedata-transport-s3'
+
+
 class TestS3TransportPlugin(unittest.TestCase):
     def setUp(self):
         plugins = imagedata.transports.get_transporter_list()
@@ -33,13 +41,22 @@ class TestS3TransportPlugin(unittest.TestCase):
             if ptype == 's3':
                 self.s3_plugin = pclass
         self.assertIsNotNone(self.s3_plugin)
+        self._delete_bucket(host=host, access_key=access_key, secret_key=secret_key,bucket=bucket)
+
+    def _delete_bucket(self, host, access_key, secret_key, bucket):
+        client = Minio(host, access_key, secret_key, cert_check=True)
+        if client.bucket_exists(bucket):
+            print('_delete_bucket: Bucket exists')
+            client.remove_bucket(bucket)
+        else:
+            print('_delete_bucket: Bucket does not exist')
 
     def test_write_single_file(self):
         si1 = Series(os.path.join('data', 'time00', 'Image_00019.dcm'))
-        host = 'play.min.io:9443'
-        access_key = 'Q3AM3UQ867SPQQA43P2F'
-        secret_key = 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG'
-        bucket = 'imagedata-transport-s3'
+        # host = 'play.min.io:9443'
+        # access_key = 'Q3AM3UQ867SPQQA43P2F'
+        # secret_key = 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG'
+        # bucket = 'imagedata-transport-s3'
         # bucket = 'my-bucketname'
         d = 's3://{}:{}@{}/{}/time00.zip'.format(
             access_key,
