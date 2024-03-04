@@ -129,7 +129,7 @@ class S3Transport(AbstractTransport):
         path_split = path.split('/')
         try:
             bucket = path_split[1]
-            path = path_split[2:].join('/')
+            path = '/'.join(path_split[2:])
         except IndexError:
             raise ValueError('No bucket given in URL {}'.format(path))
         print('S3Transport.open: bucket: "{}", path ({}): "{}"'.format(bucket, type(path), path))
