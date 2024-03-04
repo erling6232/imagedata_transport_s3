@@ -47,6 +47,7 @@ class TestS3TransportPlugin(unittest.TestCase):
             host,
             bucket
         )
+        print('Save to: {}'.format(d))
         si1.write(d, formats=['dicom'])
         si2 = Series(d)
         self.assertEqual(si1.dtype, si2.dtype)
