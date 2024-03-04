@@ -9,6 +9,7 @@ import os.path
 # import tempfile
 #from .context import imagedata
 from minio import Minio
+from minio.deleteobjects import DeleteObject
 from minio.error import S3Error
 import imagedata.cmdline
 import imagedata.readdata
@@ -45,6 +46,17 @@ class TestS3TransportPlugin(unittest.TestCase):
 
     def _delete_bucket(self):
         client = Minio(host, access_key, secret_key, cert_check=True)
+
+        # Remove a prefix recursively.
+        delete_object_list = map(
+            lambda x: DeleteObject(x.object_name),
+            client.list_objects(bucket, ".", recursive=True),
+        )
+        print('_delete_bucket delete_object_list: {}'.format(delete_object_list))
+        errors = client.remove_objects(bucket, delete_object_list)
+        for error in errors:
+            print("error occurred when deleting object", error)
+
         print('_delete_bucket: verify bucket: {}'.format(bucket))
         if client.bucket_exists(bucket):
             print('_delete_bucket: Bucket exists')
