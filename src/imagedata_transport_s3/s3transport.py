@@ -121,6 +121,7 @@ class S3Transport(AbstractTransport):
         """
         bucket, obj = self._get_bucket_and_object(path)
         result = self.client.stat_object(bucket, obj)
+        print( 'result: {}'.format(result) )
         raise NotImplementedError('S3Transport.exists is not implemented')
 
     def _get_bucket_and_object(self, path):
