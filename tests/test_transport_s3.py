@@ -41,9 +41,9 @@ class TestS3TransportPlugin(unittest.TestCase):
             if ptype == 's3':
                 self.s3_plugin = pclass
         self.assertIsNotNone(self.s3_plugin)
-        self._delete_bucket(host=host, access_key=access_key, secret_key=secret_key,bucket=bucket)
+        self._delete_bucket()
 
-    def _delete_bucket(self, host, access_key, secret_key, bucket):
+    def _delete_bucket(self):
         client = Minio(host, access_key, secret_key, cert_check=True)
         if client.bucket_exists(bucket):
             print('_delete_bucket: Bucket exists')
