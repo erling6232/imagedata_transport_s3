@@ -126,6 +126,14 @@ class S3Transport(AbstractTransport):
     def open(self, path, mode='r'):
         """Extract a member from the archive as a file-like object.
         """
+        path_split = path.split('/')
+        try:
+            bucket = path_split[1]
+            path = path_split[2:]
+        except IndexError:
+            raise ValueError('No bucket given in URL {}'.format(path))
+        print('S3Transport.open: bucket: "{}", path: "{}"'.format(bucket, path))
+
         if mode[0] == 'r' and not self.__local:
             if len(path) == 0:
                 raise FileNotFoundError('Empty filename "{}" not found.'.format(path))
