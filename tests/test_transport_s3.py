@@ -27,7 +27,7 @@ plugins[plugin_type].append((plugin_name, class_name, pclass))
 # import mimetypes
 # mimetypes.add_type('application/biff', '.biff')
 
-host = 'play.min.io:9443'
+host = 'play.min.io:9000'
 access_key = 'Q3AM3UQ867SPQQA43P2F'
 secret_key = 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG'
 bucket = 'imagedata-transport-s3'
