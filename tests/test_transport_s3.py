@@ -124,6 +124,35 @@ class TestS3TransportPlugin(unittest.TestCase):
             False
         )
 
+    def test_walk(self):
+        # Ensure bucket exists
+        d = 's3://{}:{}@{}/{}/\{\}'.format(
+            access_key,
+            secret_key,
+            host,
+            bucket
+        )
+        si1 = Series(os.path.join('data', 'time00'))
+        si1.write(d.format('t/time00.zip'), formats=['dicom'])
+        si1.write(d.format('u/time00.zip'), formats=['dicom'])
+        si2 = Series(os.path.join('data', 'time01'))
+        si2.write(d.format('t/time01.zip'), formats=['dicom'])
+        si2.write(d.format('u/time01.zip'), formats=['dicom'])
+        # Now ask for non-existing and existing file
+        transport = S3Transport(
+            netloc=host,
+            root='/{}'.format(bucket),
+            opts={
+                'username': access_key,
+                'password': secret_key
+            }
+        )
+        transport.walk('t')
+        # self.assertEqual(
+        #     transport.isfile('/{}/time00.zip'.format(bucket)),
+        #     True
+        # )
+
     def test_write_reread_single_file(self):
         si1 = Series(os.path.join('data', 'time00', 'Image_00019.dcm'))
         d = 's3://{}:{}@{}/{}/time00.zip'.format(

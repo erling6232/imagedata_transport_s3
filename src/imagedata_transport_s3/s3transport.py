@@ -115,6 +115,14 @@ class S3Transport(AbstractTransport):
         Return:
         - tuples of (root, dirs, files)
         """
+        # List objectsO information recursively whose names starts with
+        # "my/prefix/".
+        bucket, obj = self._get_bucket_and_object(top)
+        objects = self.client.list_objects(
+            self.bucket, prefix=obj, recursive=True,
+        )
+        for obj in objects:
+            print(obj)
         raise NotImplementedError('S3Transport.walk is not implemented')
 
     def isfile(self, path):
