@@ -87,7 +87,8 @@ class TestS3TransportPlugin(unittest.TestCase):
                 'password': secret_key
             }
         )
-        exist = transport.exists('/{}/nofile'.format(bucket))
+        with self.assertRaises(S3Error):
+            transport.exists('/{}/nofile'.format(bucket))
 
     def test_write_reread_single_file(self):
         si1 = Series(os.path.join('data', 'time00', 'Image_00019.dcm'))
