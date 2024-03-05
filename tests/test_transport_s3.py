@@ -126,18 +126,18 @@ class TestS3TransportPlugin(unittest.TestCase):
 
     def test_walk(self):
         # Ensure bucket exists
-        d = 's3://{}:{}@{}/{}/\{\}'.format(
+        d = 's3://{}:{}@{}/{}/'.format(
             access_key,
             secret_key,
             host,
             bucket
         )
         si1 = Series(os.path.join('data', 'time00'))
-        si1.write(d.format('t/time00.zip'), formats=['dicom'])
-        si1.write(d.format('u/time00.zip'), formats=['dicom'])
+        si1.write(d + 't/time00.zip', formats=['dicom'])
+        si1.write(d + 'u/time00.zip', formats=['dicom'])
         si2 = Series(os.path.join('data', 'time01'))
-        si2.write(d.format('t/time01.zip'), formats=['dicom'])
-        si2.write(d.format('u/time01.zip'), formats=['dicom'])
+        si2.write(d + 't/time01.zip', formats=['dicom'])
+        si2.write(d + 'u/time01.zip', formats=['dicom'])
         # Now ask for non-existing and existing file
         transport = S3Transport(
             netloc=host,

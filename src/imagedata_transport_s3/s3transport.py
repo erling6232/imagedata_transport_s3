@@ -117,9 +117,9 @@ class S3Transport(AbstractTransport):
         """
         # List objectsO information recursively whose names starts with
         # "my/prefix/".
-        bucket, obj = self._get_bucket_and_object(top)
+        bucket, prefix = self._get_bucket_and_object(top)
         objects = self.client.list_objects(
-            self.bucket, prefix=obj, recursive=True,
+            self.bucket, prefix=prefix, recursive=True,
         )
         for obj in objects:
             print(obj)
