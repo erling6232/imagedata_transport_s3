@@ -121,11 +121,19 @@ class S3Transport(AbstractTransport):
         objects = self.client.list_objects(
             self.bucket, prefix=prefix, recursive=True,
         )
-        for obj in objects:
-            print(obj)
-        raise NotImplementedError('S3Transport.walk is not implemented')
+        sorted_objects = self._sort_objects(prefix, objects)
+        for obj in sorted_objects:
+            yield obj['root'], obj['dirs'], obj['files']
 
-    def isfile(self, path):
+    def _sort_objects(self, prefix, objects):
+        for obj in objects:
+            parent_dir = obj.object_name
+            print('object:', obj.object_name, obj.is_dir)
+            if not obj.is_dir:
+                print('object file:', parent_dir, obj.object_name)
+
+
+def isfile(self, path):
         """Return True if path is an existing regular file.
         """
         bucket, obj = self._get_bucket_and_object(path)
