@@ -123,11 +123,7 @@ class S3Transport(AbstractTransport):
         bucket, obj = self._get_bucket_and_object(path)
         try:
             result: minio.datatypes.Object = self.client.stat_object(bucket, obj)
-            print('content_type:', result.content_type)
-            print('etag:', result.etag)
-            print('is_dir:', result.is_dir)
-            print('result: {}'.format(result))
-            return True
+            return not result.is_dir
         except minio.error.S3Error:
             return False
 
