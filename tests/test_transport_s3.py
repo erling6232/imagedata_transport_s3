@@ -147,7 +147,7 @@ class TestS3TransportPlugin(unittest.TestCase):
                 'password': secret_key
             }
         )
-        print('walk:', bucket')
+        print('walk:', bucket)
         for root, dirs, files in transport.walk('/{}/'.format(bucket)):
             pass
         print('walk:', bucket + '/t')
