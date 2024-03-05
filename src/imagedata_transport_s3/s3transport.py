@@ -85,6 +85,9 @@ class S3Transport(AbstractTransport):
         self.__tmpdir = None
         self.__zipfile = None
 
+        print('Open server: user {} pass {}'.format(
+            self.opts['username'], self.opts['password']
+        ))
         self.client = Minio(
             self.netloc,
             access_key=self.opts['username'],
