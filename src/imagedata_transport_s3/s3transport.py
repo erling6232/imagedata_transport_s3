@@ -132,8 +132,7 @@ class S3Transport(AbstractTransport):
             if not obj.is_dir:
                 print('object file:', parent_dir, obj.object_name)
 
-
-def isfile(self, path):
+    def isfile(self, path):
         """Return True if path is an existing regular file.
         """
         bucket, obj = self._get_bucket_and_object(path)
