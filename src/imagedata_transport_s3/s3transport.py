@@ -119,15 +119,20 @@ class S3Transport(AbstractTransport):
     def isfile(self, path):
         """Return True if path is an existing regular file.
         """
+        bucket, obj = self._get_bucket_and_object(path)
+        result = self.client.stat_object(bucket, obj)
+        print('result: {}'.format(result))
         raise NotImplementedError('S3Transport.isfile is not implemented')
 
     def exists(self, path):
         """Return True if the named path exists.
         """
         bucket, obj = self._get_bucket_and_object(path)
-        result = self.client.stat_object(bucket, obj)
-        print('result: {}'.format(result))
-        raise NotImplementedError('S3Transport.exists is not implemented')
+        try:
+            self.client.stat_object(bucket, obj)
+            return True
+        except minio.error.S3Error:
+            return False
 
     def _get_bucket_and_object(self, path):
         path_split = path.split('/')
