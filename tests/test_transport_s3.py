@@ -135,6 +135,8 @@ class TestS3TransportPlugin(unittest.TestCase):
         si1 = Series(os.path.join('data', 'time00', 'Image_00019.dcm'))
         si1.write(d + 't/time00.zip', formats=['dicom'])
         si1.write(d + 'u/time00.zip', formats=['dicom'])
+        si1.write(d + 't/0/time00.zip', formats=['dicom'])
+        si1.write(d + 't/1/time00.zip', formats=['dicom'])
         si2 = Series(os.path.join('data', 'time00', 'Image_00020.dcm'))
         si2.write(d + 't/time01.zip', formats=['dicom'])
         si2.write(d + 'u/time01.zip', formats=['dicom'])

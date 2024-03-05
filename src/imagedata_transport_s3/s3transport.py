@@ -126,11 +126,15 @@ class S3Transport(AbstractTransport):
             yield obj['root'], obj['dirs'], obj['files']
 
     def _sort_objects(self, prefix, objects):
+        print('prefix:', prefix)
+        sorted_objects = {}
         for obj in objects:
-            parent_dir = obj.object_name
+            parent_dir = os.path.dirname(obj.object_name)
+            filename = os.path.basename(obj.object_name)
             print('object:', obj.object_name, obj.is_dir)
             if not obj.is_dir:
-                print('object file:', parent_dir, obj.object_name)
+                print('object file:', obj.object_name, ':', parent_dir, filename)
+        return sorted_objects
 
     def isfile(self, path):
         """Return True if path is an existing regular file.
