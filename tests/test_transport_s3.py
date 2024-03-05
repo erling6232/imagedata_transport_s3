@@ -70,7 +70,7 @@ class TestS3TransportPlugin(unittest.TestCase):
 
     def test_file_not_exist(self):
         # Ensure bucket exists
-        si = Series(np.uint16(1))
+        si = Series(os.path.join('data', 'time00', 'Image_00019.dcm'))
         d = 's3://{}:{}@{}/{}/time00.zip'.format(
             access_key,
             secret_key,
