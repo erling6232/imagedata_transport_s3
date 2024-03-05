@@ -14,12 +14,8 @@ import imagedata.transports
 from imagedata.series import Series
 
 from imagedata import plugins
-try:
-    sys.path.append(os.path.abspath('..'))
-    from src.imagedata_transport_s3.s3transport import S3Transport
-except ValueError:
-    sys.path.append(os.path.abspath('../src'))
-    from src.imagedata_transport_s3.s3transport import S3Transport
+sys.path.append(os.path.abspath('../src'))
+from src.imagedata_transport_s3.s3transport import S3Transport
 plugin_type = 'transport'
 plugin_name = S3Transport.name + 'transport'
 class_name = S3Transport.name
@@ -145,7 +141,21 @@ class TestS3TransportPlugin(unittest.TestCase):
         si2.write(d + 't/time01.zip', formats=['dicom'])
         si2.write(d + 'u/time01.zip', formats=['dicom'])
         # Now ask for non-existing and existing file
-        transport = S3Transport(
+        # transport = S3Transport(
+        #     netloc=host,
+        #     root='/{}'.format(bucket),
+        #     opts={
+        #         'username': access_key,
+        #         'password': secret_key
+        #     }
+        # )
+        # print('walk:', bucket)
+        # for root, dirs, files in transport.walk('/{}/'.format(bucket)):
+        #     pass
+        # print('walk:', bucket + '/t/')
+        # transport.walk('/{}/{}'.format(bucket, 't/'))
+        top = '/{}/{}'.format(bucket, 't/')
+        transport = self.s3_plugin(
             netloc=host,
             root='/{}'.format(bucket),
             opts={
@@ -153,12 +163,6 @@ class TestS3TransportPlugin(unittest.TestCase):
                 'password': secret_key
             }
         )
-        # print('walk:', bucket)
-        # for root, dirs, files in transport.walk('/{}/'.format(bucket)):
-        #     pass
-        # print('walk:', bucket + '/t/')
-        # transport.walk('/{}/{}'.format(bucket, 't/'))
-        top = '/{}/{}'.format(bucket, 't/')
         transport.walk(top)
         # self.assertEqual(
         #     transport.isfile('/{}/time00.zip'.format(bucket)),
