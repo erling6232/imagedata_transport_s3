@@ -4,6 +4,7 @@ import unittest
 import sys
 import os.path
 import logging
+import numpy as np
 from minio import Minio
 from minio.deleteobjects import DeleteObject
 from minio.error import S3Error
@@ -68,7 +69,8 @@ class TestS3TransportPlugin(unittest.TestCase):
             logger.debug('_delete_bucket: Bucket does not exist')
 
     def test_file_not_exist(self):
-        d = 's3://{}:{}@{}/{}/time00.zip'.format(
+        si = Series(np.uint16(1))
+        d = 's3://{}:{}@{}/{}/0.dcm'.format(
             access_key,
             secret_key,
             host,
