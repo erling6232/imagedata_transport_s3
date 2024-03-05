@@ -116,7 +116,6 @@ class S3Transport(AbstractTransport):
         - tuples of (root, dirs, files)
         """
         bucket, prefix = self._get_bucket_and_object(top)
-        tt
         print('S3Transport.walk: bucket:', bucket, 'prefix:', prefix)
         objects = self.client.list_objects(
             self.bucket, prefix=prefix, recursive=True,
