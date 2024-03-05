@@ -53,7 +53,7 @@ class S3Transport(AbstractTransport):
         for attr in ['username', 'password']:
             try:
                 self.opts[attr] = opts[attr]
-            except AttributeError:
+            except KeyError:
                 self.opts[attr] = None
         # Does netloc include username and password?
         if '@' in netloc:
