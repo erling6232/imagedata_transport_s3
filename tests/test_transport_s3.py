@@ -14,8 +14,12 @@ import imagedata.transports
 from imagedata.series import Series
 
 from imagedata import plugins
-sys.path.append(os.path.abspath('../src'))
-from src.imagedata_transport_s3.s3transport import S3Transport
+try:
+    sys.path.append(os.path.abspath('..'))
+    from src.imagedata_transport_s3.s3transport import S3Transport
+except ValueError:
+    sys.path.append(os.path.abspath('../src'))
+    from src.imagedata_transport_s3.s3transport import S3Transport
 plugin_type = 'transport'
 plugin_name = S3Transport.name + 'transport'
 class_name = S3Transport.name
@@ -152,8 +156,10 @@ class TestS3TransportPlugin(unittest.TestCase):
         # print('walk:', bucket)
         # for root, dirs, files in transport.walk('/{}/'.format(bucket)):
         #     pass
-        print('walk:', bucket + '/t/')
-        transport.walk('/{}/{}'.format(bucket, 't/'))
+        # print('walk:', bucket + '/t/')
+        # transport.walk('/{}/{}'.format(bucket, 't/'))
+        top = '/{}/{}'.format(bucket, 't/')
+        transport.walk(top)
         # self.assertEqual(
         #     transport.isfile('/{}/time00.zip'.format(bucket)),
         #     True

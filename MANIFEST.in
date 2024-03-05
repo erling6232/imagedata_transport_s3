@@ -13,6 +13,7 @@ include VERSION.txt
 include data
 recursive-include data *.zip
 prune .idea
+prune venv
 include docs
 prune docs/_build
 recursive-include docs *

@@ -115,9 +115,8 @@ class S3Transport(AbstractTransport):
         Return:
         - tuples of (root, dirs, files)
         """
-        # List objectsO information recursively whose names starts with
-        # "my/prefix/".
         bucket, prefix = self._get_bucket_and_object(top)
+        tt
         print('S3Transport.walk: bucket:', bucket, 'prefix:', prefix)
         objects = self.client.list_objects(
             self.bucket, prefix=prefix, recursive=True,
