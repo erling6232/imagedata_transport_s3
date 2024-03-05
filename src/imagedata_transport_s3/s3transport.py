@@ -49,20 +49,25 @@ class S3Transport(AbstractTransport):
         if opts is None:
             opts = {}
         self.read_directory_only = read_directory_only
-        self.opts = opts
+        self.opts = {}
+        for attr in ['username', 'password']:
+            try:
+                self.opts[attr] = opts[attr]
+            except AttributeError:
+                self.opts[attr] = None
         # Does netloc include username and password?
         if '@' in netloc:
             # Add fake scheme to satisfy urlsplit()
             url_tuple = urllib.parse.urlsplit('s3://' + netloc)
             self.netloc = url_tuple.hostname
             try:
-                opts['username'] = url_tuple.username
+                self.opts['username'] = url_tuple.username
             except AttributeError:
-                opts['username'] = None
+                pass
             try:
-                opts['password'] = url_tuple.password
+                self.opts['password'] = url_tuple.password
             except AttributeError:
-                opts['password'] = None
+                pass
         else:
             self.netloc = netloc
         logger.debug("S3Transport __init__ root: {}".format(root))
@@ -82,8 +87,8 @@ class S3Transport(AbstractTransport):
 
         self.client = Minio(
             self.netloc,
-            access_key=opts['username'],
-            secret_key=opts['password'],
+            access_key=self.opts['username'],
+            secret_key=self.opts['password'],
             cert_check=True
         )
         self.bucket = bucket
