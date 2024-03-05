@@ -168,6 +168,7 @@ class TestS3TransportPlugin(unittest.TestCase):
         #     transport.isfile('/{}/time00.zip'.format(bucket)),
         #     True
         # )
+        raise ValueError("stop")
 
     def test_write_reread_single_file(self):
         si1 = Series(os.path.join('data', 'time00', 'Image_00019.dcm'))
