@@ -7,6 +7,7 @@ import os.path
 import io
 from minio import Minio
 import minio.error
+import minio.datatypes
 import urllib
 import logging
 import tempfile
@@ -120,9 +121,15 @@ class S3Transport(AbstractTransport):
         """Return True if path is an existing regular file.
         """
         bucket, obj = self._get_bucket_and_object(path)
-        result = self.client.stat_object(bucket, obj)
-        print('result: {}'.format(result))
-        raise NotImplementedError('S3Transport.isfile is not implemented')
+        try:
+            result: minio.datatypes.Object = self.client.stat_object(bucket, obj)
+            print('content_type:', result.content_type)
+            print('etag:', result.etag)
+            print('is_dir:', result.is_dir)
+            print('result: {}'.format(result))
+            return True
+        except minio.error.S3Error:
+            return False
 
     def exists(self, path):
         """Return True if the named path exists.
