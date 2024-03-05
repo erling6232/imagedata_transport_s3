@@ -116,13 +116,14 @@ class TestS3TransportPlugin(unittest.TestCase):
             }
         )
         self.assertEqual(
-            transport.isfile('/{}/nofile'.format(bucket)),
-            False
-        )
-        self.assertEqual(
             transport.isfile('/{}/time00.zip'.format(bucket)),
             True
         )
+        self.assertEqual(
+            transport.isfile('/{}/nofile'.format(bucket)),
+            False
+        )
+
     def test_write_reread_single_file(self):
         si1 = Series(os.path.join('data', 'time00', 'Image_00019.dcm'))
         d = 's3://{}:{}@{}/{}/time00.zip'.format(
