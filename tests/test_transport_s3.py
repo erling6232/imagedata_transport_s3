@@ -74,7 +74,14 @@ class TestS3TransportPlugin(unittest.TestCase):
             host,
             bucket
         )
-        transport = S3Transport(netloc=host, root='/{}'.format(bucket))
+        transport = S3Transport(
+            netloc=host,
+            root='/{}'.format(bucket),
+            opts={
+                'username': access_key,
+                'password': secret_key
+            }
+        )
         exist = transport.exists('/{}/nofile'.format(bucket))
 
     def test_write_reread_single_file(self):
