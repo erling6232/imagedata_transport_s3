@@ -147,11 +147,11 @@ class TestS3TransportPlugin(unittest.TestCase):
                 'password': secret_key
             }
         )
-        print('walk:', bucket)
-        for root, dirs, files in transport.walk('/{}/'.format(bucket)):
-            pass
-        print('walk:', bucket + '/t')
-        transport.walk('/{}/{}'.format(bucket, 't'))
+        # print('walk:', bucket)
+        # for root, dirs, files in transport.walk('/{}/'.format(bucket)):
+        #     pass
+        print('walk:', bucket + '/t/')
+        transport.walk('/{}/{}'.format(bucket, 't/'))
         # self.assertEqual(
         #     transport.isfile('/{}/time00.zip'.format(bucket)),
         #     True
