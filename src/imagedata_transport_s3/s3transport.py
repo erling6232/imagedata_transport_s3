@@ -132,7 +132,9 @@ class S3Transport(AbstractTransport):
             filename = os.path.basename(obj.object_name)
             logger.debug('object: {}: {}'.format(obj.object_name, obj.is_dir))
             if not obj.is_dir:
-                logger.debug('object file: {}: {} {}'.format(obj.object_name, parent_dir, filename))
+                logger.debug('object file: {}: {} {}'.format(
+                    obj.object_name, parent_dir, filename)
+                )
         return sorted_objects
 
     def isfile(self, path):
