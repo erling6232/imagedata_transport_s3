@@ -42,6 +42,12 @@ jobs:
         coverage report -m
         coverage xml
         coverage html
+        ls -lR
+    - name: Upload debug.log as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: debug
+        path: debug.log
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4.0.1
       with:
