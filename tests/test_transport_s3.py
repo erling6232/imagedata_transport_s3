@@ -152,6 +152,7 @@ class TestS3TransportPlugin(unittest.TestCase):
         # print('walk:', bucket + '/t/')
         # transport.walk('/{}/{}'.format(bucket, 't/'))
         top = '/{}/{}'.format(bucket, 't/')
+        logger.debug('walk: self.transport.walk: {}'.format(self.transport.walk))
         logger.debug('walk: calling self.transport.walk({})'.format(top))
         self.transport.walk(top)
         logger.debug('walk: returned from self.transport.walk')
