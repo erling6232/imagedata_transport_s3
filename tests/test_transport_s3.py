@@ -41,6 +41,8 @@ class TestS3TransportPlugin(unittest.TestCase):
             if ptype == 's3':
                 self.s3_plugin = pclass
         self.assertIsNotNone(self.s3_plugin)
+        self.client = Minio(host, access_key, secret_key, cert_check=True)
+        self._make_bucket(bucket)
         self.transport = self.s3_plugin(
             netloc=host,
             root='/{}'.format(bucket),
@@ -54,15 +56,17 @@ class TestS3TransportPlugin(unittest.TestCase):
     def tearDown(self):
         self._delete_bucket()
 
-    def _delete_bucket(self):
-        client = Minio(host, access_key, secret_key, cert_check=True)
+    def _make_bucket(self, bucket):
+        if not self.client.bucket_exists(bucket):
+            self.client.make_bucket(bucket)
 
+    def _delete_bucket(self):
         # Remove a prefix recursively.
         delete_object_list = map(
             lambda x: DeleteObject(x.object_name),
-            client.list_objects(bucket, recursive=True),
+            self.client.list_objects(bucket, recursive=True),
         )
-        errors = client.remove_objects(bucket, delete_object_list)
+        errors = self.client.remove_objects(bucket, delete_object_list)
         try:
             for error in errors:
                 logger.error("error occurred when deleting object {}".format(error))
@@ -70,9 +74,9 @@ class TestS3TransportPlugin(unittest.TestCase):
             pass
 
         logger.debug('_delete_bucket: verify bucket: {}'.format(bucket))
-        if client.bucket_exists(bucket):
+        if self.client.bucket_exists(bucket):
             logger.debug('_delete_bucket: Bucket exists')
-            client.remove_bucket(bucket)
+            self.client.remove_bucket(bucket)
         else:
             logger.debug('_delete_bucket: Bucket does not exist')
 
