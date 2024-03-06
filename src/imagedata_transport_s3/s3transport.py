@@ -116,7 +116,7 @@ class S3Transport(AbstractTransport):
         - tuples of (root, dirs, files)
         """
         bucket, prefix = self._get_bucket_and_object(top)
-        print('S3Transport.walk: bucket:', bucket, 'prefix:', prefix)
+        logger.debug('S3Transport.walk: bucket: {}, prefix: {}'.format(bucket, prefix))
         objects = self.client.list_objects(
             self.bucket, prefix=prefix, recursive=True,
         )
@@ -125,14 +125,14 @@ class S3Transport(AbstractTransport):
             yield obj['root'], obj['dirs'], obj['files']
 
     def _sort_objects(self, prefix, objects):
-        print('prefix:', prefix)
+        logger.debug('prefix: ' + prefix)
         sorted_objects = {}
         for obj in objects:
             parent_dir = os.path.dirname(obj.object_name)
             filename = os.path.basename(obj.object_name)
-            print('object:', obj.object_name, obj.is_dir)
+            logger.debug('object: {}: {}'.format(obj.object_name, obj.is_dir))
             if not obj.is_dir:
-                print('object file:', obj.object_name, ':', parent_dir, filename)
+                logger.debug('object file: {}: {} {}'.format(obj.object_name, parent_dir, filename))
         return sorted_objects
 
     def isfile(self, path):
