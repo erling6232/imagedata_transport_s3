@@ -115,6 +115,7 @@ class S3Transport(AbstractTransport):
         Return:
         - tuples of (root, dirs, files)
         """
+        logger.debug('S3Transport.walk:')
         bucket, prefix = self._get_bucket_and_object(top)
         logger.debug('S3Transport.walk: bucket: {}, prefix: {}'.format(bucket, prefix))
         objects = self.client.list_objects(
