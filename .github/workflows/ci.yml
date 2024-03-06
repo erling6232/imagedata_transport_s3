@@ -42,6 +42,8 @@ jobs:
         coverage report -m
         coverage xml
         coverage html
+    - name: File list
+      run: |
         ls -lR
     - name: Upload debug.log as artifact
       uses: actions/upload-artifact@v4
