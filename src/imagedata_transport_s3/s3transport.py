@@ -15,6 +15,7 @@ import shutil
 from imagedata.transports.abstracttransport import AbstractTransport
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(filename='s3transport.log', encoding='utf-8', level=logging.DEBUG)
 
 
 class S3Transport(AbstractTransport):
