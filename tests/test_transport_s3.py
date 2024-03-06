@@ -152,9 +152,12 @@ class TestS3TransportPlugin(unittest.TestCase):
         # print('walk:', bucket + '/t/')
         # transport.walk('/{}/{}'.format(bucket, 't/'))
         top = '/{}/{}'.format(bucket, 't/')
+        logger.debug('walk: self.transport: {}'.format(self.transport))
         logger.debug('walk: self.transport.walk: {}'.format(self.transport.walk))
         logger.debug('walk: calling self.transport.walk({})'.format(top))
-        self.transport.walk(top)
+        walk_list = self.transport.walk(top)
+        for root, dirs, files in walk_list:
+            logger.debug('Found: {} {} {}'.format(root, dirs, files))
         logger.debug('walk: returned from self.transport.walk')
         # self.assertEqual(
         #     transport.isfile('/{}/time00.zip'.format(bucket)),
