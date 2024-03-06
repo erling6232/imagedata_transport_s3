@@ -41,6 +41,14 @@ class TestS3TransportPlugin(unittest.TestCase):
             if ptype == 's3':
                 self.s3_plugin = pclass
         self.assertIsNotNone(self.s3_plugin)
+        self.transport = self.s3_plugin(
+            netloc=host,
+            root='/{}'.format(bucket),
+            opts={
+                'username': access_key,
+                'password': secret_key
+            }
+        )
         self._delete_bucket()
 
     def tearDown(self):
@@ -79,20 +87,12 @@ class TestS3TransportPlugin(unittest.TestCase):
         )
         si.write(d, formats=['dicom'])
         # Now ask for non-existing and existing file
-        transport = S3Transport(
-            netloc=host,
-            root='/{}'.format(bucket),
-            opts={
-                'username': access_key,
-                'password': secret_key
-            }
-        )
         self.assertEqual(
-            transport.exists('/{}/nofile'.format(bucket)),
+            self.transport.exists('/{}/nofile'.format(bucket)),
             False
         )
         self.assertEqual(
-            transport.exists('/{}/time00.zip'.format(bucket)),
+            self.transport.exists('/{}/time00.zip'.format(bucket)),
             True
         )
 
@@ -107,20 +107,12 @@ class TestS3TransportPlugin(unittest.TestCase):
         )
         si.write(d, formats=['dicom'])
         # Now ask for non-existing and existing file
-        transport = S3Transport(
-            netloc=host,
-            root='/{}'.format(bucket),
-            opts={
-                'username': access_key,
-                'password': secret_key
-            }
-        )
         self.assertEqual(
-            transport.isfile('/{}/time00.zip'.format(bucket)),
+            self.transport.isfile('/{}/time00.zip'.format(bucket)),
             True
         )
         self.assertEqual(
-            transport.isfile('/{}/nofile'.format(bucket)),
+            self.transport.isfile('/{}/nofile'.format(bucket)),
             False
         )
 
@@ -155,15 +147,7 @@ class TestS3TransportPlugin(unittest.TestCase):
         # print('walk:', bucket + '/t/')
         # transport.walk('/{}/{}'.format(bucket, 't/'))
         top = '/{}/{}'.format(bucket, 't/')
-        transport = self.s3_plugin(
-            netloc=host,
-            root='/{}'.format(bucket),
-            opts={
-                'username': access_key,
-                'password': secret_key
-            }
-        )
-        transport.walk(top)
+        self.transport.walk(top)
         # self.assertEqual(
         #     transport.isfile('/{}/time00.zip'.format(bucket)),
         #     True
