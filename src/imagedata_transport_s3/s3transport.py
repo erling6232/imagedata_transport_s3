@@ -131,16 +131,25 @@ class S3Transport(AbstractTransport):
     def _sort_objects(self, prefix, objects):
         logger.debug('S3Transport._sort_objects: prefix: ' + prefix)
         sorted_objects = {}
-        for obj in objects:
-            parent_dir = os.path.dirname(obj.object_name)
-            filename = os.path.basename(obj.object_name)
-            logger.debug('S3Transport._sort_objects: object: {}: {}'.format(
-                obj.object_name, obj.is_dir)
-            )
-            if not obj.is_dir:
-                logger.debug('S3Transport._sort_objects: object file: {}: {} {}'.format(
-                    obj.object_name, parent_dir, filename)
+        try:
+            for obj in objects:
+                logger.debug('S3Transport._sort_objects: obj: ({}) {}'.format(
+                    type(obj), obj)
                 )
+                logger.debug('S3Transport._sort_objects: obj.object_name: {}'.format(
+                    obj.object_name)
+                )
+                parent_dir = os.path.dirname(obj.object_name)
+                filename = os.path.basename(obj.object_name)
+                logger.debug('S3Transport._sort_objects: object: {}: {}'.format(
+                    obj.object_name, obj.is_dir)
+                )
+                if not obj.is_dir:
+                    logger.debug('S3Transport._sort_objects: object file: {}: {} {}'.format(
+                        obj.object_name, parent_dir, filename)
+                    )
+        except Exception as e:
+            logger.error('S3Transport._sort_objects: exception:\n  {}'.format(e))
         return sorted_objects
 
     def isfile(self, path):
