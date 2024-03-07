@@ -268,7 +268,7 @@ def _add_file(dirs, filename):
             # parent_dir[component]['dirs'].append(path[-1])
             parent_dir = parent_dir[component]
         logger.debug('__add_file: before insert into files: {}'.format(parent_dir))
-        parent_dir[component]['files'].append(path[-1])
+        parent_dir['files'].append(path[-1])
     except Exception as e:
         logger.error('_add_file: exception: {}'.format(e))
     logger.debug('_add_file: dirs: {}'.format(dirs))
