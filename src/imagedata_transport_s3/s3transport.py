@@ -259,7 +259,14 @@ def _sort_objects(prefix, objects):
 def _add_file(dirs, files, filename):
     logger.debug('_add_file: filename: {}'.format(filename))
     path = filename.split('/')
-    # parent_dirs = dirs['/']
+    parent_dir = dirs['/']
     # parent_files = files['/']
     for component in path[1:-1]:
         logger.debug('_add_file: component: {}'.format(component))
+        if component not in parent_dir:
+            parent_dir[component] = []
+        if component not in files:
+            files[component] = []
+        files[component].append(path[-1])
+        parent_dir = parent_dir[component]
+    logger.debug('_add_file: dirs: {}'.format(dirs))
