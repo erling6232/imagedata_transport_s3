@@ -115,10 +115,9 @@ class S3Transport(AbstractTransport):
         Return:
         - tuples of (root, dirs, files)
         """
-        def _yield_dir(parent_dir):
+        def _yield_dir(parent_dir, root):
             logger.debug('_yield_dir: {}'.format(parent_dir))
-            yield '/', [], []
-            # yield parent_dir, parent_dir['dirs'], parent_dir['files']
+            yield root, parent_dir['dirs'], parent_dir['files']
             # for d in parent_dir['dirs'].keys():
             #     logger.debug('_yield_dir: key {}'.format(d))
             #     # _yield_dir(parent_dir['dirs'][d])
@@ -135,7 +134,7 @@ class S3Transport(AbstractTransport):
             dirs)
         )
 
-        for root, dirs, files in _yield_dir(dirs['/']):
+        for root, dirs, files in _yield_dir(dirs['/'], '/'):
             logger.debug('S3Transport.walk: yield {} {} {}'.format(root, dirs, files))
             yield root, dirs, files
 
