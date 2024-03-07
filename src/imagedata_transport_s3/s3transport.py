@@ -237,12 +237,12 @@ def _sort_objects(prefix, objects):
             logger.debug('S3Transport._sort_objects: object: {}: {}'.format(
                 obj.object_name, obj.is_dir)
             )
-            if parent_dir not in dirs:
-                dirs[parent_dir] = []
-            if parent_dir not in files:
-                files[parent_dir] = []
+            # if parent_dir not in dirs:
+            #     dirs[parent_dir] = []
+            # if parent_dir not in files:
+            #     files[parent_dir] = []
             if obj.is_dir:
-                dirs[parent_dir].append(obj.object_name)
+                # dirs[parent_dir].append(obj.object_name)
                 logger.debug('S3Transport._sort_objects: object dir: {}: {} {}'.format(
                     obj.object_name, parent_dir, filename)
                 )
@@ -261,12 +261,15 @@ def _add_file(dirs, files, filename):
     path = filename.split('/')
     parent_dir = dirs['/']
     # parent_files = files['/']
-    for component in path[1:-1]:
-        logger.debug('_add_file: component: {}'.format(component))
-        if component not in parent_dir:
-            parent_dir[component] = []
-        if component not in files:
-            files[component] = []
-        files[component].append(path[-1])
-        parent_dir = parent_dir[component]
+    try:
+        for component in path[1:-1]:
+            logger.debug('_add_file: component: {}'.format(component))
+            if component not in parent_dir:
+                parent_dir[component] = []
+            if component not in files:
+                files[component] = []
+            files[component].append(path[-1])
+            parent_dir = parent_dir[component]
+    except Exception as e:
+        logger.error('_add_file: exception: {}'.format(e))
     logger.debug('_add_file: dirs: {}'.format(dirs))
