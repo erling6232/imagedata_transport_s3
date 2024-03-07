@@ -263,9 +263,10 @@ def _add_file(dirs, filename):
     parent_dir = dirs['/']
     try:
         for component in path[1:-1]:
-            logger.debug('_add_file: component: {}'.format(component))
+            logger.debug('_add_file: component:  {}'.format(component))
+            logger.debug('_add_file: parent_dir: {} ({})'.format(parent_dir, type(parent_dir)))
             if component not in parent_dir:
-                parent_dir[component] = []
+                parent_dir[component] = { '/': {'dirs': [], 'files': []} }
             dirs[component]['files'].append(path[-1])
             parent_dir = parent_dir[component]
     except Exception as e:
