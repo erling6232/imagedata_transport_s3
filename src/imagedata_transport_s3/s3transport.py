@@ -122,13 +122,13 @@ class S3Transport(AbstractTransport):
             self.bucket, prefix=prefix, recursive=True,
         )
         logger.debug('S3Transport.walk: calling _sort_objects')
-        dirs, files = _sort_objects(prefix, objects)
-        logger.debug('S3Transport.walk: returned _sort_objects:\ndirs: {}\nfiles: {}'.format(
-            dirs, files)
+        dirs = _sort_objects(prefix, objects)
+        logger.debug('S3Transport.walk: returned _sort_objects:\ndirs: {}'.format(
+            dirs)
         )
         yield '/{}'.format(top), [], []
         for key in dirs.keys():
-            yield top, dirs[key], files[key]
+            yield top, dirs[key]['dirs'], dirs[key]['files']
 
     def isfile(self, path):
         """Return True if path is an existing regular file.
@@ -228,8 +228,9 @@ class S3Transport(AbstractTransport):
 
 def _sort_objects(prefix, objects):
     logger.debug('S3Transport._sort_objects: prefix: ' + prefix)
-    dirs = {'/': []}
-    files = {'/': []}
+    dirs = {
+           '/': {'dirs': [], 'files': []}
+            }
     try:
         for obj in objects:
             parent_dir = os.path.dirname(obj.object_name)
@@ -247,28 +248,25 @@ def _sort_objects(prefix, objects):
                     obj.object_name, parent_dir, filename)
                 )
             else:
-                _add_file(dirs, files, obj.object_name)
+                _add_file(dirs, obj.object_name)
                 logger.debug('S3Transport._sort_objects: object file: {}: {} {}'.format(
                     obj.object_name, parent_dir, filename)
                 )
     except Exception as e:
         logger.error('S3Transport._sort_objects: exception:\n  {}'.format(e))
-    return dirs, files
+    return dirs
 
 
-def _add_file(dirs, files, filename):
+def _add_file(dirs, filename):
     logger.debug('_add_file: filename: {}'.format(filename))
     path = filename.split('/')
     parent_dir = dirs['/']
-    # parent_files = files['/']
     try:
         for component in path[1:-1]:
             logger.debug('_add_file: component: {}'.format(component))
             if component not in parent_dir:
                 parent_dir[component] = []
-            if component not in files:
-                files[component] = []
-            files[component].append(path[-1])
+            dirs[component]['files'].append(path[-1])
             parent_dir = parent_dir[component]
     except Exception as e:
         logger.error('_add_file: exception: {}'.format(e))
