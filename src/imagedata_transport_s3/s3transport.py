@@ -227,31 +227,14 @@ class S3Transport(AbstractTransport):
 
 
 def _sort_objects(prefix, objects):
-    logger.debug('S3Transport._sort_objects: prefix: ' + prefix)
+    # logger.debug('S3Transport._sort_objects: prefix: ' + prefix)
     dirs = {'/': {'dirs': {}, 'files': []}}
     try:
         for obj in objects:
-            # parent_dir = os.path.dirname(obj.object_name)
-            # filename = os.path.basename(obj.object_name)
-            logger.debug('S3Transport._sort_objects: object: {}: {}'.format(
-                obj.object_name, obj.is_dir)
-            )
-            # if parent_dir not in dirs:
-            #     dirs[parent_dir] = []
-            # if parent_dir not in files:
-            #     files[parent_dir] = []
+            # logger.debug('S3Transport._sort_objects: object: {}: {}'.format(
+            #     obj.object_name, obj.is_dir)
+            # )
             _add_object(dirs, obj)
-            # if obj.is_dir:
-            #     _add_dir(dirs, obj.object_name)
-            #     # dirs[parent_dir].append(obj.object_name)
-            #     logger.debug('S3Transport._sort_objects: object dir: {}: {} {}'.format(
-            #         obj.object_name, parent_dir, filename)
-            #     )
-            # else:
-            #     _add_file(dirs, obj.object_name)
-            #     logger.debug('S3Transport._sort_objects: object file: {}: {} {}'.format(
-            #         obj.object_name, parent_dir, filename)
-            #     )
     except Exception as e:
         logger.error('S3Transport._sort_objects: exception:\n  {}'.format(e))
     return dirs
@@ -264,18 +247,18 @@ def _add_object(dirs, object):
     parent_dir = dirs['/']
     try:
         for component in path[1:-1]:
-            logger.debug('_add_object: component :  {}'.format(component))
-            logger.debug('_add_object: dirs      : {} ({})'.format(dirs, type(dirs)))
-            logger.debug('_add_object: parent_dir: {} ({})'.format(parent_dir, type(parent_dir)))
+            # logger.debug('_add_object: component :  {}'.format(component))
+            # logger.debug('_add_object: dirs      : {} ({})'.format(dirs, type(dirs)))
+            # logger.debug('_add_object: parent_dir: {} ({})'.format(parent_dir, type(parent_dir)))
             if component not in parent_dir:
                 parent_dir[component] = {'dirs': {}, 'files': []}
             parent_dir = parent_dir[component]
-        logger.debug('_add_object: dirs       before insert into files: {}'.format(dirs))
-        logger.debug('_add_object: parent_dir before insert into files: {}'.format(parent_dir))
+        # logger.debug('_add_object: dirs       before insert into files: {}'.format(dirs))
+        # logger.debug('_add_object: parent_dir before insert into files: {}'.format(parent_dir))
         if object.is_dir:
             parent_dir['dirs'].append(path[-1])
         else:
             parent_dir['files'].append(path[-1])
     except Exception as e:
         logger.error('_add_object: exception: {}'.format(e))
-    logger.debug('_add_object: dirs: {}'.format(dirs))
+    # logger.debug('_add_object: dirs: {}'.format(dirs))
