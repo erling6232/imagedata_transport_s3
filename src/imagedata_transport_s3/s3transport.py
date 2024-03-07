@@ -124,7 +124,7 @@ class S3Transport(AbstractTransport):
             logger.debug('_yield_dir: yield done')
             for d in parent_dir['dirs'].keys():
                 logger.debug('_yield_dir: key {}'.format(d))
-                yield _yield_dir(parent_dir['dirs'][d], '{}/{}'.format(root, d))
+                yield from _yield_dir(parent_dir['dirs'][d], '{}/{}'.format(root, d))
 
         logger.debug('S3Transport.walk:')
         bucket, prefix = self._get_bucket_and_object(top)
@@ -140,7 +140,7 @@ class S3Transport(AbstractTransport):
 
         for root, dirs, files in _yield_dir(dirs['/'], '/'):
             logger.debug('S3Transport.walk: yield {} {} {}'.format(root, dirs, files))
-            yield from root, dirs, files
+            yield root, dirs, files
 
     def isfile(self, path):
         """Return True if path is an existing regular file.
