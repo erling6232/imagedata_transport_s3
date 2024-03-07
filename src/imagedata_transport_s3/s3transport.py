@@ -135,7 +135,7 @@ class S3Transport(AbstractTransport):
             dirs)
         )
 
-        for root, dirs, files in _yield_dir(dirs):
+        for root, dirs, files in _yield_dir(dirs['/']):
             logger.debug('S3Transport.walk: yield {} {} {}'.format(root, dirs, files))
             yield root, dirs, files
 
