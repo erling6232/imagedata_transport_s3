@@ -120,7 +120,7 @@ class S3Transport(AbstractTransport):
             yield root, [*parent_dir['dirs']], parent_dir['files']
             for d in parent_dir['dirs'].keys():
                 logger.debug('_yield_dir: key {}'.format(d))
-                _yield_dir(parent_dir['dirs'][d], d)
+                _yield_dir(parent_dir['dirs'][d], '{}/{}'.format(root, d))
 
         logger.debug('S3Transport.walk:')
         bucket, prefix = self._get_bucket_and_object(top)
