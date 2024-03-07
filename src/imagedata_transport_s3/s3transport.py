@@ -265,7 +265,7 @@ def _add_file(dirs, filename):
             logger.debug('_add_file: parent_dir: {} ({})'.format(parent_dir, type(parent_dir)))
             if component not in parent_dir:
                 parent_dir[component] = {'/': {'dirs': [], 'files': []}}
-            dirs[component]['files'].append(path[-1])
+            parent_dir[component]['files'].append(path[-1])
             parent_dir = parent_dir[component]
     except Exception as e:
         logger.error('_add_file: exception: {}'.format(e))
