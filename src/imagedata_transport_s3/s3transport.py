@@ -265,7 +265,7 @@ def _add_file(dirs, filename):
             logger.debug('_add_file: dirs      : {} ({})'.format(dirs, type(dirs)))
             logger.debug('_add_file: parent_dir: {} ({})'.format(parent_dir, type(parent_dir)))
             if component not in parent_dir:
-                parent_dir[component] = {'/': {'dirs': {}, 'files': []}}
+                parent_dir[component] = {'dirs': {}, 'files': []}
             # parent_dir[component]['dirs'].append(path[-1])
             parent_dir = parent_dir[component]
         logger.debug('_add_file: dirs       before insert into files: {}'.format(dirs))
