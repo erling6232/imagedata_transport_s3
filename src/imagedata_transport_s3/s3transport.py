@@ -228,9 +228,7 @@ class S3Transport(AbstractTransport):
 
 def _sort_objects(prefix, objects):
     logger.debug('S3Transport._sort_objects: prefix: ' + prefix)
-    dirs = {
-           '/': {'dirs': [], 'files': []}
-            }
+    dirs = {'/': {'dirs': [], 'files': []}}
     try:
         for obj in objects:
             parent_dir = os.path.dirname(obj.object_name)
@@ -266,7 +264,7 @@ def _add_file(dirs, filename):
             logger.debug('_add_file: component:  {}'.format(component))
             logger.debug('_add_file: parent_dir: {} ({})'.format(parent_dir, type(parent_dir)))
             if component not in parent_dir:
-                parent_dir[component] = { '/': {'dirs': [], 'files': []} }
+                parent_dir[component] = {'/': {'dirs': [], 'files': []}}
             dirs[component]['files'].append(path[-1])
             parent_dir = parent_dir[component]
     except Exception as e:
