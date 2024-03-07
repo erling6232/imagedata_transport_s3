@@ -118,9 +118,9 @@ class S3Transport(AbstractTransport):
         def _yield_dir(parent_dir, root):
             logger.debug('_yield_dir: {}'.format(parent_dir))
             yield root, parent_dir['dirs'], parent_dir['files']
-            # for d in parent_dir['dirs'].keys():
-            #     logger.debug('_yield_dir: key {}'.format(d))
-            #     # _yield_dir(parent_dir['dirs'][d])
+            for d in parent_dir['dirs'].keys():
+                logger.debug('_yield_dir: key {}'.format(d))
+                # _yield_dir(parent_dir['dirs'][d])
 
         logger.debug('S3Transport.walk:')
         bucket, prefix = self._get_bucket_and_object(top)
@@ -258,9 +258,9 @@ def _add_object(dirs, object):
             # logger.debug('_add_object: component :  {}'.format(component))
             # logger.debug('_add_object: dirs      : {} ({})'.format(dirs, type(dirs)))
             # logger.debug('_add_object: parent_dir: {} ({})'.format(parent_dir, type(parent_dir)))
-            if component not in parent_dir:
-                parent_dir[component] = {'dirs': {}, 'files': []}
-            parent_dir = parent_dir[component]
+            if component not in parent_dir['dirs']:
+                parent_dir['dirs'][component] = {'dirs': {}, 'files': []}
+            parent_dir = parent_dir['dirs'][component]
         # logger.debug('_add_object: dirs       before insert into files: {}'.format(dirs))
         # logger.debug('_add_object: parent_dir before insert into files: {}'.format(parent_dir))
         if object.is_dir:
