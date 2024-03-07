@@ -231,8 +231,8 @@ def _sort_objects(prefix, objects):
     dirs = {'/': {'dirs': {}, 'files': []}}
     try:
         for obj in objects:
-            parent_dir = os.path.dirname(obj.object_name)
-            filename = os.path.basename(obj.object_name)
+            # parent_dir = os.path.dirname(obj.object_name)
+            # filename = os.path.basename(obj.object_name)
             logger.debug('S3Transport._sort_objects: object: {}: {}'.format(
                 obj.object_name, obj.is_dir)
             )
