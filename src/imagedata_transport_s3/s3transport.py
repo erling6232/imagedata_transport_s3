@@ -122,48 +122,13 @@ class S3Transport(AbstractTransport):
             self.bucket, prefix=prefix, recursive=True,
         )
         logger.debug('S3Transport.walk: calling _sort_objects')
-        dirs, files = self._sort_objects(prefix, objects)
+        dirs, files = _sort_objects(prefix, objects)
         logger.debug('S3Transport.walk: returned _sort_objects:\ndirs: {}\nfiles: {}'.format(
             dirs, files)
         )
         yield '/{}'.format(top), [], []
         for key in dirs.keys():
             yield top, dirs[key], files[key]
-
-    def _sort_objects(self, prefix, objects):
-        logger.debug('S3Transport._sort_objects: prefix: ' + prefix)
-        dirs = {}
-        files = {}
-        try:
-            for obj in objects:
-                logger.debug('S3Transport._sort_objects: obj: ({}) {}'.format(
-                    type(obj), obj)
-                )
-                logger.debug('S3Transport._sort_objects: obj.object_name: {}'.format(
-                    obj.object_name)
-                )
-                parent_dir = os.path.dirname(obj.object_name)
-                filename = os.path.basename(obj.object_name)
-                logger.debug('S3Transport._sort_objects: object: {}: {}'.format(
-                    obj.object_name, obj.is_dir)
-                )
-                if parent_dir not in dirs:
-                    dirs[parent_dir] = []
-                if parent_dir not in files:
-                    files[parent_dir] = []
-                if obj.is_dir:
-                    dirs[parent_dir].append(obj.object_name)
-                    logger.debug('S3Transport._sort_objects: object dir: {}: {} {}'.format(
-                        obj.object_name, parent_dir, filename)
-                    )
-                else:
-                    files[parent_dir].append(obj.object_name)
-                    logger.debug('S3Transport._sort_objects: object file: {}: {} {}'.format(
-                        obj.object_name, parent_dir, filename)
-                    )
-        except Exception as e:
-            logger.error('S3Transport._sort_objects: exception:\n  {}'.format(e))
-        return dirs, files
 
     def isfile(self, path):
         """Return True if path is an existing regular file.
@@ -259,3 +224,42 @@ class S3Transport(AbstractTransport):
             description (str): Preferably a one-line string describing the object
         """
         raise NotImplementedError('S3Transport.info is not implemented')
+
+
+def _sort_objects(prefix, objects):
+    logger.debug('S3Transport._sort_objects: prefix: ' + prefix)
+    dirs = {'/': []}
+    files = {'/': []}
+    try:
+        for obj in objects:
+            parent_dir = os.path.dirname(obj.object_name)
+            filename = os.path.basename(obj.object_name)
+            logger.debug('S3Transport._sort_objects: object: {}: {}'.format(
+                obj.object_name, obj.is_dir)
+            )
+            if parent_dir not in dirs:
+                dirs[parent_dir] = []
+            if parent_dir not in files:
+                files[parent_dir] = []
+            if obj.is_dir:
+                dirs[parent_dir].append(obj.object_name)
+                logger.debug('S3Transport._sort_objects: object dir: {}: {} {}'.format(
+                    obj.object_name, parent_dir, filename)
+                )
+            else:
+                _add_file(dirs, files, obj.object_name)
+                logger.debug('S3Transport._sort_objects: object file: {}: {} {}'.format(
+                    obj.object_name, parent_dir, filename)
+                )
+    except Exception as e:
+        logger.error('S3Transport._sort_objects: exception:\n  {}'.format(e))
+    return dirs, files
+
+
+def _add_file(dirs, files, filename):
+    logger.debug('_add_file: filename: {}'.format(filename))
+    path = filename.split('/')
+    parent_dirs = dirs['/']
+    parent_files = files['/']
+    for component in path[1:-1]:
+        logger.debug('_add_file: component: {}'.format(component))
