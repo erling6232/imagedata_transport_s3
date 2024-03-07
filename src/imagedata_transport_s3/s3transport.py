@@ -117,11 +117,14 @@ class S3Transport(AbstractTransport):
         """
         def _yield_dir(parent_dir, root):
             logger.debug('_yield_dir: {}'.format(parent_dir))
+            logger.debug('_yield_dir: yield {} {} {}'.format(
+                root, [*parent_dir['dirs']], parent_dir['files']
+            ))
             yield root, [*parent_dir['dirs']], parent_dir['files']
+            logger.debug('_yield_dir: yield done')
             for d in parent_dir['dirs'].keys():
                 logger.debug('_yield_dir: key {}'.format(d))
-                r, d, f = _yield_dir(parent_dir['dirs'][d], '{}/{}'.format(root, d))
-                yield r, d, f
+                yield _yield_dir(parent_dir['dirs'][d], '{}/{}'.format(root, d))
 
         logger.debug('S3Transport.walk:')
         bucket, prefix = self._get_bucket_and_object(top)
