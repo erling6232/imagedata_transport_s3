@@ -5,7 +5,7 @@ on: [push]
 jobs:
   build_wheels:
   
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
@@ -57,13 +57,13 @@ jobs:
       with:
         name: debug
         path: debug.log
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v4.0.1
-      with:
-        fail_ci_if_error: true
-        flags: unittests
-        token: ${{ secrets.CODECOV_TOKEN }}
-        slug: erling6232/imagedata_transport_s3
+#    - name: Upload coverage reports to Codecov
+#      uses: codecov/codecov-action@v4.0.1
+#      with:
+#        fail_ci_if_error: true
+#        flags: unittests
+#        token: ${{ secrets.CODECOV_TOKEN }}
+#        slug: erling6232/imagedata_transport_s3
     - name: Archive code coverage html report
       uses: actions/upload-artifact@v4
       with:
