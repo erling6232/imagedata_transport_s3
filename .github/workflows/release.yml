@@ -8,7 +8,7 @@ name: release
 jobs:
   pypi-publish:
     name: upload release to PyPI
-    needs: [build_wheels, build_sdist]
+    # needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
     # Specifying a GitHub environment is optional, but strongly encouraged
     environment: pypi
