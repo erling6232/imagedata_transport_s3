@@ -5,7 +5,6 @@ import sys
 import os
 import os.path
 import logging
-import numpy as np
 from minio import Minio
 from minio.deleteobjects import DeleteObject
 from minio.error import S3Error
@@ -26,18 +25,10 @@ plugins[plugin_type].append((plugin_name, class_name, pclass))
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename='debug.log', encoding='utf-8', level=logging.DEBUG)
 
-# import mimetypes
-# mimetypes.add_type('application/biff', '.biff')
-
-# host = 'play.min.io:9000'
-# bucket = 'imagedata-transport-s3'
-# access_key = 'Q3AM3UQ867SPQQA43P2F'
-# secret_key = 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG'
 host = os.environ.get('MINIO_HOST')
 bucket = os.environ.get('MINIO_BUCKET')
 access_key = os.environ.get('ACCESS_KEY')
 secret_key = os.environ.get('SECRET_KEY')
-print('MINIO_HOST', host)
 
 
 class TestS3TransportPlugin(unittest.TestCase):
@@ -106,6 +97,7 @@ class TestS3TransportPlugin(unittest.TestCase):
             self.transport.exists('/{}/time00.zip'.format(bucket)),
             True
         )
+        logger.debug(self.transport.info('/{}/time00.zip'.format(bucket)))
 
     def test_isfile(self):
         # Ensure bucket exists

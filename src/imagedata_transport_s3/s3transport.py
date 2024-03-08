@@ -236,7 +236,14 @@ class S3Transport(AbstractTransport):
         Returns:
             description (str): Preferably a one-line string describing the object
         """
-        raise NotImplementedError('S3Transport.info is not implemented')
+        bucket, obj = self._get_bucket_and_object(path)
+        try:
+            result: minio.datatypes.Object = self.client.stat_object(bucket, obj)
+            return '{} {} {} {}'.format(
+                result.object_name, result.content_type, result.size, result.last_modified
+            )
+        except minio.error.S3Error:
+            raise FileNotFoundError('File not found: {}'.format(path))
 
 
 def _sort_objects(prefix, objects):
