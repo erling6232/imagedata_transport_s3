@@ -36,6 +36,10 @@ jobs:
         python -m pip install --user --upgrade build
         python -m build
     - name: Run Unit Tests and generate coverage report
+      env:
+        ACCESS_KEY: ${{ play.min.io.ACCESS_KEY }}
+        SECRET_KEY: ${{ play.min.io.SECRET_KEY }}
+        MINIO_HOST: ${{ play.min.io.MINIO_HOST }}
       run: |
         pip install coverage
         coverage run -m unittest discover

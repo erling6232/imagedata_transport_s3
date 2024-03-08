@@ -2,6 +2,7 @@
 
 import unittest
 import sys
+import os
 import os.path
 import logging
 import numpy as np
@@ -28,9 +29,13 @@ logging.basicConfig(filename='debug.log', encoding='utf-8', level=logging.DEBUG)
 # import mimetypes
 # mimetypes.add_type('application/biff', '.biff')
 
-host = 'play.min.io:9000'
-access_key = 'Q3AM3UQ867SPQQA43P2F'
-secret_key = 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG'
+# host = 'play.min.io:9000'
+# access_key = 'Q3AM3UQ867SPQQA43P2F'
+# secret_key = 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG'
+# bucket = 'imagedata-transport-s3'
+host = os.environ.get('MINIO_HOST')
+access_key = os.environ.get('ACCESS_KEY')
+secret_key = os.environ.get('SECRET_KEY')
 bucket = 'imagedata-transport-s3'
 
 
