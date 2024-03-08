@@ -37,6 +37,7 @@ host = os.environ.get('MINIO_HOST')
 bucket = os.environ.get('MINIO_BUCKET')
 access_key = os.environ.get('ACCESS_KEY')
 secret_key = os.environ.get('SECRET_KEY')
+print('MINIO_HOST', host)
 
 
 class TestS3TransportPlugin(unittest.TestCase):
