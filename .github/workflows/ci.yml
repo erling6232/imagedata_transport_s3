@@ -11,7 +11,7 @@ jobs:
         # python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
         python-version: ["3.11"]
 
-    environment: play
+    environment: play-min-io
 
     steps:
     - name: Checkout
@@ -41,8 +41,8 @@ jobs:
       env:
         ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        MINIO_HOST: ${{ play.MINIO_HOST }}
-        MINIO_BUCKET: ${{ play.MINIO_BUCKET }}
+        MINIO_HOST: ${{ vars.MINIO_HOST }}
+        MINIO_BUCKET: ${{ vars.MINIO_BUCKET }}
       run: |
         pip install coverage
         coverage run -m unittest discover
