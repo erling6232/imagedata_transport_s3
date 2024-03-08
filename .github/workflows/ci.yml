@@ -39,8 +39,8 @@ jobs:
         python -m build
     - name: Run Unit Tests and generate coverage report
       env:
-        # ACCESS_KEY: ${{ play.ACCESS_KEY }}
-        # SECRET_KEY: ${{ play.SECRET_KEY }}
+        ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
         MINIO_HOST: ${{ play.MINIO_HOST }}
         MINIO_BUCKET: ${{ play.MINIO_BUCKET }}
       run: |
