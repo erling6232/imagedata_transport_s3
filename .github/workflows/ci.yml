@@ -44,6 +44,7 @@ jobs:
         MINIO_HOST: ${{ vars.MINIO_HOST }}
         MINIO_BUCKET: ${{ vars.MINIO_BUCKET }}
       run: |
+        echo "MINIO_HOST $MINIO_HOST"
         pip install coverage
         coverage run -m unittest discover
         coverage report -m
