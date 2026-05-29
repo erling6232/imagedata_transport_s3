@@ -10,7 +10,6 @@ Imagedata plugin for transport to S3/Minio storage
 
 .. |Docs Badge| image:: https://readthedocs.org/projects/imagedata/badge/
     :alt: Documentation Status
-    :scale: 100%
     :target: https://imagedata.readthedocs.io
 
 .. |buildstatus| image:: https://github.com/erling6232/imagedata_transport_s3/actions/workflows/ci.yml/badge.svg
