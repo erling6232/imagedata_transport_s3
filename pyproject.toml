@@ -1,7 +1,63 @@
 [build-system]
 requires = [
-    "setuptools>=42",
+    "setuptools>=75.6.0",
     "wheel",
-    "importlib"
+    "flake8",
+    "imagedata>=3.8.0,<3.10"
 ]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "imagedata_transport_s3"
+version = "1.0.4"
+license-files = [
+    "LICENSE.txt",
+]
+authors = [
+    {name = "Erling Andersen", email = "Erling.Andersen@Helse-Bergen.NO"}
+]
+maintainers = [
+    {name = "Erling Andersen", email = "Erling.Andersen@Helse-Bergen.NO"}
+]
+description = "Imagedata transport plugin for S3/Minio storage"
+readme = "README.rst"
+requires-python = ">=3.10,<3.15"
+keywords = [
+    "python",
+    "medical",
+    "imaging",
+    "s3",
+    "minio"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Development Status :: 4 - Beta",
+    "Environment :: Other Environment",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Healthcare Industry",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Medical Science Apps."
+]
+dependencies = [
+    "setuptools",
+    "imagedata>=3.8,<3.10",
+    "minio"
+]
+
+[project.urls]
+Documentation = "https://imagedata.readthedocs.io"
+SourceCode = "https://github.com/erling6232/imagedata_transport_s3"
+#Changelog = "https://github.com/erling6232/imagedata_transport_s3/CHANGELOG.rst"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.cibuildwheel]
+test-requires = "coverage"
+test-command = "coverage run -m unittest discover imagedata_transport_s3/tests -t imagedata_transport_s3"
+
+[project.entry-points."imagedata_plugins"]
+s3transport = "imagedata_transport_s3.s3transport:S3Transport"
