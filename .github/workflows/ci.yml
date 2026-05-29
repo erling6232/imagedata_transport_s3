@@ -33,7 +33,7 @@ jobs:
         python3 -m pip install --upgrade pip setuptools wheel
         python3 -m pip install check-manifest flake8
         check-manifest
-        flake8 .
+        flake8 --max-line-length 100 .
 
     - name: Install dependencies
       run: |
